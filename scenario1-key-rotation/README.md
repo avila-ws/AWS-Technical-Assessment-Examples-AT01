@@ -245,7 +245,12 @@ Beyond directly answering the questions, several strategic and operational consi
 *   **Communication and Training:** Over-communicate with application teams about rotation schedules, potential impacts, and the importance of using key aliases. Ensure operations teams are trained on the BYOK import procedures and monitoring alerts.
 *   **Grace Periods:** For the monitoring solution (Section 5), implement a reasonable grace period for newly created keys or after a rotation, preventing false positive non-compliance alerts immediately after setup or rotation.
 
-### 
+### 7.3. Potential Future Enhancements / Alternatives
+
+*   **Granularity of Rotation:** Evaluate if a single rotation schedule fits all data types and regulatory needs, or if more frequent rotation is required for certain sensitive data (potentially using different keys/aliases).
+*   **AWS CloudHSM:** For organizations seeking FIPS 140-2 Level 3 validation *within* AWS, migrating from on-premise HSMs to AWS CloudHSM could be considered. This simplifies the BYOK import process (as CloudHSM integrates more directly with KMS) but involves migrating the HSM dependency to the cloud.
+*   **Automated Re-encryption:** Explore further automation for S3 re-encryption using Step Functions orchestration for S3 Batch Operations triggered after successful alias updates.
+*   **Key Policy Management:** Use IaC or policy management tools (like OPA Gatekeeper, if applicable in a Kubernetes context accessing KMS) to manage and audit KMS key policies consistently.
 
 ## 8. References
 
