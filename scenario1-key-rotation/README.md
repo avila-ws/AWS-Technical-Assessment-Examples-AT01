@@ -95,7 +95,15 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 *   **Performance Monitoring:** Monitor application and database performance metrics for any unexpected degradation.
 *   **Compliance Monitoring:** Verify that the monitoring setup (detailed in Section 5) correctly reflects the new key status and rotation timestamp.
 
-### 4.4. 
+### 4.4. Phase 4: Post-Rotation Cleanup
+
+*   **Old Key Material:** The previous key material imported into KMS remains available for decrypting older data until it expires (if an expiration date was set during import) or is manually deleted according to retention policies. *Note: Deleting key material makes data encrypted solely with it unrecoverable.* A safer approach is often to let unused imported material expire naturally or remain indefinitely if storage permits and regulations allow, relying on the CMK *state* (e.g., `Disabled`, `PendingDeletion`) for control if needed.
+*   **Documentation:** Update operational runbooks, CMDBs, or documentation to reflect the completed rotation cycle and the timestamp.
+*   **Lessons Learned:** Conduct a brief retrospective to identify improvements for the next rotation cycle.
+
+*(Placeholder for a process flow diagram, e.g., `./diagrams/key_rotation_flow.png`)*
+
+### 4.5. 
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
