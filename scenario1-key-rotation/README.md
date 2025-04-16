@@ -256,4 +256,27 @@ Completing these steps provides a comprehensive approach to implementing and man
 
 ## 8. References
 
-*(Content to be added later)*
+*   **AWS Key Management Service (KMS) - Key Rotation:**
+    *   [Rotating keys](https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html)
+    *   [Importing key material in AWS KMS keys](https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html)
+    *   [GetParametersForImport API](https://docs.aws.amazon.com/kms/latest/APIReference/API_GetParametersForImport.html)
+    *   [ImportKeyMaterial API](https://docs.aws.amazon.com/kms/latest/APIReference/API_ImportKeyMaterial.html)
+    *   [AWS KMS concepts](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html) (Origin, Aliases, CMKs)
+*   **AWS Config:**
+    *   [AWS Config Developer Guide](https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html)
+    *   [Custom Rules for AWS Config](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html)
+    *   [Lambda Function Handler for Custom Config Rules (Python Example)](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_python-sample.html)
+*   **AWS CloudTrail:**
+    *   [Logging AWS KMS API calls with AWS CloudTrail](https://docs.aws.amazon.com/kms/latest/developerguide/logging-using-cloudtrail.html)
+    *   [LookupEvents API](https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_LookupEvents.html)
+*   **AWS Lambda:**
+    *   [AWS Lambda Developer Guide](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
+*   **Amazon EventBridge:**
+    *   [Amazon EventBridge User Guide](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html)
+    *   [Tutorial: Log AWS Config compliance changes using EventBridge](https://docs.aws.amazon.com/config/latest/developerguide/logging-using-eventbridge.html)
+*   **AWS Security Hub:**
+    *   [AWS Security Hub User Guide](https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html)
+*   **Service-Specific Encryption:**
+    *   [Protecting data using server-side encryption with KMS keys stored in AWS KMS (SSE-KMS) - S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
+    *   [Using server-side encryption for data at rest in DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html)
+    *   [Encrypting Amazon RDS resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
