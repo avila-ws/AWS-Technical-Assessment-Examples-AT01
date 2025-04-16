@@ -229,7 +229,16 @@ By layering these controls—encrypting the key material at the source using AWS
 
 ## 7. Additional Considerations and Next Steps
 
-*(Content to be added later)*
+Beyond directly answering the questions, several strategic and operational considerations enhance the proposed key rotation strategy:
+
+### 7.1. DevSecOps Integration
+
+*   **Security as Code:** Manage the AWS Config custom rule, Lambda function, associated IAM roles, and EventBridge rules using Infrastructure as Code (IaC - Terraform or CloudFormation) for repeatable, auditable, and version-controlled deployment.
+*   **Automated Testing:** Incorporate automated tests for the Lambda function's logic and potentially simulate KMS/CloudTrail interactions in a test environment.
+*   **CI/CD for Monitoring:** Deploy updates to the monitoring solution (Config rule, Lambda) through a CI/CD pipeline that includes security scans and policy checks.
+*   **Feedback Loop:** Ensure notifications from EventBridge/SNS are routed effectively into incident management or ticketing systems used by Ops/Security teams for timely response.
+
+###
 
 ## 8. References
 
