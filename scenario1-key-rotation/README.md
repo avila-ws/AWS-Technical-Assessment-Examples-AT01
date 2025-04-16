@@ -53,4 +53,10 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
 *   **Auditing and Compliance:** Ensuring the entire process is auditable and provides clear evidence of compliance (which key was active when, verification of rotation) is crucial. Key creation/import timestamps in CloudTrail are vital.
 *   **Policy Updates:** Key policies might need review or updates if rotation affects how keys are administered or used.
 
-### 3.4. 
+### 3.4. Cost Implications
+
+*   **API Costs:** KMS API calls (encryption, decryption, import) might increase, especially if manual re-encryption activities (like S3 Batch) are performed at scale.
+*   **Operational Effort:** The human effort involved in planning, executing, and validating the rotation represents a cost.
+*   **Compute/Storage Costs:** Re-encryption tasks (S3 Batch, RDS snapshot copy/restore) can incur temporary compute and storage costs.
+
+## 4. 
