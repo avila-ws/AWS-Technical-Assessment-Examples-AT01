@@ -196,6 +196,14 @@ The core security relies on encrypting the key material *before* it leaves the s
     *   **Algorithm:** This encryption *must* use the `RSAES_OAEP_SHA-1` or `RSAES_OAEP_SHA-256` padding scheme, as specified by AWS KMS when you requested the parameters. This effectively performs envelope encryption: the AWS public key wraps the actual key material.
     *   **HSM Capability:** The on-premise HSM environment must support exporting key material encrypted with an external RSA public key using the required OAEP padding scheme.
 
+### 6.3. Secure Transmission Channel
+
+Even though the key material itself is encrypted, the channel used for transport must also be secured:
+
+1.  **TLS Encryption:** All AWS API endpoints, including the KMS endpoint used for `ImportKeyMaterial`, require **HTTPS (TLS)**. This encrypts the entire communication channel, protecting the encrypted key material and the import token from eavesdropping or tampering *in transit*. Ensure clients use up-to-date TLS versions (e.g., TLS 1.2 or higher).
+2.  **Network Path:**
+    *   **Recommended:** Transmit the import request over a private, dedicated network connection like **AWS Direct Connect** or a secure **VPN Site-to-Site** connection between the on-premise network and the AWS VPC. This avoids traversing the public internet.
+    *   **Alternative (Less Secure):** If using the public internet, rely solely on TLS, ensuring strict endpoint validation on the client-side.
 
 ## 7. Additional Considerations and Next Steps
 
