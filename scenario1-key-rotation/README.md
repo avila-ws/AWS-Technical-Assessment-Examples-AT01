@@ -238,7 +238,14 @@ Beyond directly answering the questions, several strategic and operational consi
 *   **CI/CD for Monitoring:** Deploy updates to the monitoring solution (Config rule, Lambda) through a CI/CD pipeline that includes security scans and policy checks.
 *   **Feedback Loop:** Ensure notifications from EventBridge/SNS are routed effectively into incident management or ticketing systems used by Ops/Security teams for timely response.
 
-###
+### 7.2. Pragmatic Implementation
+
+*   **Phased Rollout:** Implement the key rotation process (Phase 2 execution) in waves, starting with non-critical, lower environments (Dev, Test). Gather lessons learned before proceeding to production.
+*   **Clear Rollback Plans:** Define specific, actionable rollback procedures for each phase, especially for critical failures during key import or alias update. Know how to revert an alias change quickly and what the implications are for data encrypted during the failed attempt.
+*   **Communication and Training:** Over-communicate with application teams about rotation schedules, potential impacts, and the importance of using key aliases. Ensure operations teams are trained on the BYOK import procedures and monitoring alerts.
+*   **Grace Periods:** For the monitoring solution (Section 5), implement a reasonable grace period for newly created keys or after a rotation, preventing false positive non-compliance alerts immediately after setup or rotation.
+
+### 
 
 ## 8. References
 
