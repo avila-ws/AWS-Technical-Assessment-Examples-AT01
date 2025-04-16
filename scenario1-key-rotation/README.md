@@ -78,7 +78,15 @@ The key rotation process for BYOK keys requires careful planning and execution. 
     *   Rollback procedures in case of critical failure.
 *   **Pre-computation/Checks:** Ensure the on-premise HSM is ready, personnel are trained, and necessary IAM permissions for import are in place.
 
-### 4.2
+### 4.2. Phase 2: Execution
+
+*   **Generate New Key Material:** Create new cryptographic key material on the designated on-premise HSM according to its procedures.
+*   **Secure Import:** Securely import the new key material into the *existing* target KMS CMK in the security account. (Refer to Section 6 for details on securing this transport).
+    *   **Important:** We are *rotating the material* of an existing CMK, not creating a brand new CMK for each rotation, unless policy dictates otherwise (which adds complexity). Importing new material automatically creates a new *backing key version* within the same CMK ARN/ID.
+*   **Update Key Alias:** **Crucially**, update the relevant KMS key alias (e.g., `alias/service-environment`) to point to the CMK *after* the new key material has been successfully imported. This redirects all *new* encryption/decryption operations using that alias to utilize the newly imported key material. The AWS CLI `update-alias` or SDK equivalent is used here.
+*   **Trigger Re-encryption (If Necessary):** For services like S3 where existing data isn't automatically re-encrypted, initiate planned re-encryption processes (e.g., S3 Batch Operations) if required by compliance timelines.
+
+### 4.3.
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
