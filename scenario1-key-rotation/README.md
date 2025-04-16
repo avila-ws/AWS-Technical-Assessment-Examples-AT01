@@ -103,7 +103,11 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 
 *(Placeholder for a process flow diagram, e.g., `./diagrams/key_rotation_flow.png`)*
 
-### 4.5. 
+### 4.5. Automation and DevSecOps Considerations
+
+*   **Automate Where Possible:** Script inventory checks, alias updates, and validation steps to reduce manual effort and errors.
+*   **Security Checkpoints:** Integrate security validation steps (e.g., checking key policy correctness post-rotation) into the process.
+*   **Infrastructure as Code (IaC):** While the key material import itself is a manual/scripted operation, surrounding infrastructure (like monitoring rules detailed later) should be managed via IaC (Terraform/CloudFormation).
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
