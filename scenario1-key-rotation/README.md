@@ -111,7 +111,47 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
-*(Content to be added later)*
+To continuously monitor resources encrypted with BYOK keys and ensure their key material is rotated according to the defined policy (e.g., annually), we can leverage several integrated AWS managed services. The core challenge lies in tracking the age of the *imported key material* for keys with `Origin: EXTERNAL`, as standard AWS Config rules primarily check if automatic rotation is enabled (not applicable here).
+
+### 5.1. Proposed Monitoring Architecture
+
+The recommended approach involves using **AWS Config** with a **custom rule** backed by an **AWS Lambda function**. This setup allows for tailored compliance checks specific to the BYOK key rotation requirement.
+
+**Key Services Involved:**
+
+1.  **AWS Config:**
+    *   **Purpose:** Resource inventory, configuration history, and compliance checking framework.
+    *   **Role:** Deploys a *custom rule* that periodically evaluates the compliance status of BYOK KMS keys.
+2.  **AWS Lambda:**
+    *   **Purpose:** Provides the custom evaluation logic for the AWS Config rule.
+    *   **Role:** The Lambda function code will:
+        *   Receive the KMS key ARN (or identifier) as input from AWS Config.
+        *   Verify the key `Origin` is `EXTERNAL`.
+        *   Query **AWS CloudTrail** logs (using API calls like `lookup_events`) to find the timestamp of the *most recent successful* `ImportKeyMaterial` event for that specific key ARN.
+        *   Calculate the age of the imported key material based on the current date and the event timestamp.
+        *   Compare this age against the mandated rotation period (e.g., 365 days, configurable via Lambda environment variables or rule parameters).
+        *   Return the compliance status (`COMPLIANT` or `NON_COMPLIANT`) and annotation back to AWS Config.
+3.  **AWS CloudTrail:**
+    *   **Purpose:** Logs API activity within the AWS account.
+    *   **Role:** Provides the essential audit trail containing the `ImportKeyMaterial` events and their timestamps, which the Lambda function queries to determine the last rotation date. CloudTrail must be enabled and configured to log KMS events.
+4.  **Amazon EventBridge:**
+    *   **Purpose:** Central event bus service.
+    *   **Role:** Captures compliance change events published by AWS Config (e.g., when a key transitions to `NON_COMPLIANT`). These events can trigger downstream actions like:
+        *   Sending notifications via **Amazon SNS** (Simple Notification Service) to security/ops teams.
+        *   Triggering automated remediation workflows (if applicable and safe).
+5.  **AWS Security Hub:**
+    *   **Purpose:** Centralized view of security and compliance findings.
+    *   **Role:** Integrates with AWS Config to ingest compliance findings. This provides a unified dashboard to view non-compliant keys alongside other security alerts across the AWS environment.
+6.  **Amazon CloudWatch:**
+    *   **Purpose:** Monitoring and observability service.
+    *   **Role:**
+        *   Collects logs from the Lambda function for debugging and monitoring its execution.
+        *   Can be used to create dashboards visualizing the overall compliance status (e.g., number of compliant vs. non-compliant keys over time) based on metrics derived from Config/EventBridge events.
+        *   Can trigger CloudWatch Alarms based on non-compliance events or Lambda errors.
+
+*(Placeholder for an architecture diagram, e.g., `./diagrams/monitoring_architecture.png`)*
+
+### 5.2.
 
 ## 6. Question 4: Securing Key Material Transportation (HSM to KMS)
 
