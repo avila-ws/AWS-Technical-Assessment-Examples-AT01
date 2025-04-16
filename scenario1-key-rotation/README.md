@@ -151,7 +151,19 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
 
 *(Placeholder for an architecture diagram, e.g., `./diagrams/monitoring_architecture.png`)*
 
-### 5.2.
+### 5.2. Implementation Considerations
+
+*   **Config Rule Trigger:** The custom AWS Config rule can be triggered periodically (e.g., daily) to evaluate all KMS keys or change-triggered based on configuration changes to `AWS::KMS::Key` resources. A periodic trigger is generally more suitable for time-based compliance like key material age.
+*   **Lambda Permissions:** The Lambda function's execution role needs permissions to:
+    *   `kms:DescribeKey` (to get key details like Origin).
+    *   `cloudtrail:LookupEvents` (to query import history).
+    *   `config:PutEvaluations` (to send results back to AWS Config).
+    *   Logging permissions (`logs:CreateLogGroup`, `logs:CreateLogStream`, `logs:PutLogEvents`).
+*   **CloudTrail Scope:** Ensure the CloudTrail trail used for querying covers the region(s) where the KMS keys reside and includes KMS management events. If keys are multi-Region replicas, the logic might need adjustments.
+*   **Scalability and Cost:** Consider the number of keys to monitor. AWS Config rule evaluations and Lambda invocations incur costs. Ensure CloudTrail query efficiency in the Lambda function.
+*   **Bootstrapping:** When initially deploying the rule, all keys might be evaluated. There needs to be a defined process or initial grace period for keys newly created or recently rotated just before the rule deployment.
+
+### 5.3. 
 
 ## 6. Question 4: Securing Key Material Transportation (HSM to KMS)
 
