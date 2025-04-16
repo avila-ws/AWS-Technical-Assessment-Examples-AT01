@@ -18,4 +18,24 @@ The existing encryption implementation, illustrated in the provided assessment d
 
 *(Placeholder for a simplified diagram if needed later, e.g., `./diagrams/current_architecture_overview.png`)*
 
-## 3. 
+## 3. Question 1: Key Rotation Challenges and Impacts
+
+Implementing mandatory rotation for existing BYOK KMS keys presents several challenges and potential impacts across technical, operational, and security dimensions:
+
+### 3.1. Service-Specific Technical Challenges
+
+AWS services interact with KMS keys differently, leading to varied rotation impacts:
+
+*   **Amazon S3:**
+    *   **Challenge:** Automatic KMS key rotation (via AWS) *does not* apply to existing S3 objects. When a key is rotated (new key material imported or alias updated), only *new* objects written to the bucket will be encrypted with the new key version. Existing objects remain encrypted with the previous key version.
+    *   **Impact:** To achieve full compliance for data-at-rest over time, existing objects may require manual re-encryption (e.g., using S3 Batch Operations with a Lambda function or a COPY operation in place). This can be time-consuming and potentially costly for large buckets.
+*   **Amazon RDS:**
+    *   **Challenge:** Changing the KMS key associated with an encrypted RDS instance typically involves creating a new snapshot, copying the snapshot while specifying the *new* KMS key, and then restoring the instance from the encrypted copy or modifying the instance directly (depending on DB engine and specifics).
+    *   **Impact:** This process often requires downtime for the database instance during the snapshot copy and restore/modification phase. The duration depends on database size and underlying operations. Careful planning and execution within maintenance windows are critical. Existing automated snapshots will also use the key version active at the time of their creation.
+*   **Amazon DynamoDB:**
+    *   **Challenge:** Tables encrypted with KMS (SSE-KMS) using a Customer Managed Key (CMK) handle key reference typically via alias. When the alias points to a new key/version, *newly written data* will use that new key. AWS manages the background encryption process. Similar to S3, DynamoDB *does not automatically re-encrypt all existing data* immediately upon alias change or key material rotation. Re-encryption happens over time as data is naturally rewritten or potentially through a full table export/import or backup/restore cycle if immediate compliance is mandated for all data.
+    *   **Impact:** Potential performance implications during periods of heavy writes or explicit re-encryption activities. The primary impact is ensuring compliance timelines align with how DynamoDB handles key changes for existing data.
+
+*(Placeholder for a diagram illustrating these differential impacts, e.g., `./diagrams/service_specific_challenges.png`)*
+
+### 3.2. 
