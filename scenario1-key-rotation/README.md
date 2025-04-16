@@ -101,7 +101,7 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 *   **Documentation:** Update operational runbooks, CMDBs, or documentation to reflect the completed rotation cycle and the timestamp.
 *   **Lessons Learned:** Conduct a brief retrospective to identify improvements for the next rotation cycle.
 
-*(Placeholder for a process flow diagram, e.g., `./diagrams/key_rotation_flow.png`)*
+![Key Rotation Process Flow](https://www.mermaidchart.com/raw/0aeb343e-9187-4cf5-aec4-70b34cd2be38?theme=light&version=v0.1&format=svg)
 
 ### 4.5. Automation and DevSecOps Considerations
 
