@@ -163,7 +163,15 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
 *   **Scalability and Cost:** Consider the number of keys to monitor. AWS Config rule evaluations and Lambda invocations incur costs. Ensure CloudTrail query efficiency in the Lambda function.
 *   **Bootstrapping:** When initially deploying the rule, all keys might be evaluated. There needs to be a defined process or initial grace period for keys newly created or recently rotated just before the rule deployment.
 
-### 5.3. 
+### 5.3. Identifying Non-Compliant *Resources*
+
+While the Config rule primarily targets the *KMS key's* compliance status, identifying the specific *resources* (RDS, S3, DynamoDB) using a non-compliant key requires an additional step:
+
+1.  **From Config/Security Hub:** When a key is marked `NON_COMPLIANT`, obtain its ARN.
+2.  **Resource Mapping:** Use AWS SDK/CLI scripts or AWS Config advanced queries to find resources that are configured to use the specific alias associated with the non-compliant KMS key ARN. This leverages the inventory capabilities of AWS Config or direct API calls (`describe-db-instances`, `get-bucket-encryption`, `describe-table`).
+    *   *Note:* This mapping assumes consistent use of aliases. If resources reference keys by ARN directly, that simplifies lookup but complicates rotation itself.
+
+This two-step approach (identify non-compliant key -> map key alias to resources) effectively addresses the requirement to identify non-compliant resources using AWS managed services as the foundation.
 
 ## 6. Question 4: Securing Key Material Transportation (HSM to KMS)
 
