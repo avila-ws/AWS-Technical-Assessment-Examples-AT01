@@ -175,7 +175,19 @@ This two-step approach (identify non-compliant key -> map key alias to resources
 
 ## 6. Question 4: Securing Key Material Transportation (HSM to KMS)
 
-*(Content to be added later)*
+Securing the transport of cryptographic key material from the on-premise HSM to AWS KMS is paramount to maintain the integrity and confidentiality of the keys throughout the BYOK process. The "best way" involves a defense-in-depth approach, layering multiple security controls:
+
+### 6.1. Pre-computation: Generating Wrapping Key and Import Token
+
+Before exporting material from the HSM, initiate the import process from the AWS side:
+
+1.  **Specify Target CMK:** Identify the existing KMS Customer Managed Key (CMK) with `Origin: EXTERNAL` for which you want to import new key material.
+2.  **Get Parameters for Import:** Use the AWS Management Console, CLI (`aws kms get-parameters-for-import`), or SDK to retrieve:
+    *   **Public Key:** An RSA public key provided by AWS KMS, specific to this import operation.
+    *   **Import Token:** A unique token associated with the public key, valid for 24 hours.
+3.  **Secure Download:** Securely download and store this public key and import token. Access should be restricted to authorized personnel involved in the key ceremony.
+
+### 6.2.
 
 ## 7. Additional Considerations and Next Steps
 
