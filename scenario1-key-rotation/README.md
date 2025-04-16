@@ -46,4 +46,11 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
 *   **Testing and Validation:** Thorough testing is required in lower environments before applying changes in production to ensure applications function correctly with the rotated keys.
 *   **Rollback Complexity:** Rolling back a key rotation, especially after new data has been written with the new key, can be complex and may require restoring from backups.
 
-### 3.3. 
+### 3.3. Application and Security Impacts
+
+*   **Potential Downtime:** As noted for RDS, downtime might be required, impacting application availability.
+*   **Transitional Risk:** During the rotation window (importing new key, updating alias, validating), there's a brief period where operational errors could potentially impact encryption availability or correctness if not handled carefully.
+*   **Auditing and Compliance:** Ensuring the entire process is auditable and provides clear evidence of compliance (which key was active when, verification of rotation) is crucial. Key creation/import timestamps in CloudTrail are vital.
+*   **Policy Updates:** Key policies might need review or updates if rotation affects how keys are administered or used.
+
+### 3.4. 
