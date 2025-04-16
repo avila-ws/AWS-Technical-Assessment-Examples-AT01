@@ -86,7 +86,16 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 *   **Update Key Alias:** **Crucially**, update the relevant KMS key alias (e.g., `alias/service-environment`) to point to the CMK *after* the new key material has been successfully imported. This redirects all *new* encryption/decryption operations using that alias to utilize the newly imported key material. The AWS CLI `update-alias` or SDK equivalent is used here.
 *   **Trigger Re-encryption (If Necessary):** For services like S3 where existing data isn't automatically re-encrypted, initiate planned re-encryption processes (e.g., S3 Batch Operations) if required by compliance timelines.
 
-### 4.3.
+### 4.3. Phase 3: Validation and Monitoring
+
+*   **Functional Testing:** Application teams perform functional tests to verify applications relying on the rotated keys operate correctly.
+*   **Encryption Verification:**
+    *   Check new objects/data created in S3, RDS, DynamoDB are using the new key version (can be verified via API calls like `HeadObject` in S3, checking KMS Key ID references, or through CloudTrail event analysis).
+    *   Monitor CloudTrail logs for any KMS encryption/decryption errors related to the rotated keys or aliases.
+*   **Performance Monitoring:** Monitor application and database performance metrics for any unexpected degradation.
+*   **Compliance Monitoring:** Verify that the monitoring setup (detailed in Section 5) correctly reflects the new key status and rotation timestamp.
+
+### 4.4. 
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
