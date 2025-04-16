@@ -59,4 +59,22 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
 *   **Operational Effort:** The human effort involved in planning, executing, and validating the rotation represents a cost.
 *   **Compute/Storage Costs:** Re-encryption tasks (S3 Batch, RDS snapshot copy/restore) can incur temporary compute and storage costs.
 
-## 4. 
+## 4. Question 2: Key Rotation Process (High-Level)
+
+*(Content to be added later)*
+
+## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
+
+*(Content to be added later)*
+
+## 6. Question 4: Securing Key Material Transportation (HSM to KMS)
+
+*(Content to be added later)*
+
+## 7. Additional Considerations and Next Steps
+
+*(Content to be added later)*
+
+## 8. References
+
+*(Content to be added later)*
