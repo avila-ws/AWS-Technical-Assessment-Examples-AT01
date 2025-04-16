@@ -61,7 +61,24 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
 
 ## 4. Question 2: Key Rotation Process (High-Level)
 
-*(Content to be added later)*
+The key rotation process for BYOK keys requires careful planning and execution. It can be broken down into the following high-level phases:
+
+### 4.1. Phase 1: Preparation and Planning
+
+*   **Inventory and Analysis:**
+    *   Identify all KMS keys currently in use (`Origin: EXTERNAL`) across all environments and services.
+    *   Map each key alias to the specific resources it encrypts (S3 buckets, RDS instances, DynamoDB tables, etc.). Automated scripting (e.g., using AWS SDK/CLI) is highly recommended for accuracy at scale.
+    *   Analyze potential impacts based on service type (as detailed in Section 3).
+    *   Define the target rotation frequency based on regulatory requirements and internal security policies.
+*   **Risk Assessment:** Evaluate risks associated with the rotation process for critical applications and data.
+*   **Detailed Plan:** Create a detailed execution plan, including:
+    *   Sequencing (e.g., which environments/services rotate first - typically non-production first).
+    *   Maintenance windows for services requiring downtime (like RDS).
+    *   Communication plan for stakeholders and application teams.
+    *   Rollback procedures in case of critical failure.
+*   **Pre-computation/Checks:** Ensure the on-premise HSM is ready, personnel are trained, and necessary IAM permissions for import are in place.
+
+### 4.2
 
 ## 5. Question 3: Monitoring Non-Compliant Resources (AWS Managed Services)
 
