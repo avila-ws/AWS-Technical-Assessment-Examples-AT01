@@ -187,7 +187,15 @@ Before exporting material from the HSM, initiate the import process from the AWS
     *   **Import Token:** A unique token associated with the public key, valid for 24 hours.
 3.  **Secure Download:** Securely download and store this public key and import token. Access should be restricted to authorized personnel involved in the key ceremony.
 
-### 6.2.
+### 6.2. Key Material Encryption at Source (Envelope Encryption Principle)
+
+The core security relies on encrypting the key material *before* it leaves the secure boundary of the on-premise HSM environment:
+
+1.  **Generate Key Material:** Generate the actual symmetric key material (e.g., 256-bit AES key) within the HSM according to established procedures.
+2.  **Wrap/Encrypt the Material:** Use the RSA **public key** obtained from AWS KMS (Step 6.1) to encrypt the symmetric key material.
+    *   **Algorithm:** This encryption *must* use the `RSAES_OAEP_SHA-1` or `RSAES_OAEP_SHA-256` padding scheme, as specified by AWS KMS when you requested the parameters. This effectively performs envelope encryption: the AWS public key wraps the actual key material.
+    *   **HSM Capability:** The on-premise HSM environment must support exporting key material encrypted with an external RSA public key using the required OAEP padding scheme.
+
 
 ## 7. Additional Considerations and Next Steps
 
