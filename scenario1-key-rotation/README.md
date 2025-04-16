@@ -38,4 +38,12 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
 
 *(Placeholder for a diagram illustrating these differential impacts, e.g., `./diagrams/service_specific_challenges.png`)*
 
-### 3.2. 
+### 3.2. Operational Challenges
+
+*   **Coordination:** Managing rotation across multiple environments (Dev, Int, Prod) and various service teams requires significant coordination and planning.
+*   **Alias Management:** Strict discipline is needed to ensure applications *consistently* use key aliases instead of hardcoded Key IDs. Any direct Key ID usage will break upon rotation.
+*   **BYOK Process Complexity:** The process of generating, securely transporting, and importing new key material from the on-premise HSM adds operational overhead compared to AWS-generated keys with automatic rotation.
+*   **Testing and Validation:** Thorough testing is required in lower environments before applying changes in production to ensure applications function correctly with the rotated keys.
+*   **Rollback Complexity:** Rolling back a key rotation, especially after new data has been written with the new key, can be complex and may require restoring from backups.
+
+### 3.3. 
