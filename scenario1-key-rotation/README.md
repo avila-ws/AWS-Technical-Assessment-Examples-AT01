@@ -223,7 +223,7 @@ The actual API call to import the material must be secured:
 2.  **Key State:** Verify the target CMK state in KMS remains `Enabled` and confirm the key material has been imported (details might be visible via `DescribeKey`, though not the material itself).
 3.  **CloudTrail Logging:** Ensure AWS CloudTrail is enabled and configured to capture the `ImportKeyMaterial` event. This log entry serves as a crucial audit record, timestamping the operation and identifying the principal who performed it. Regularly audit these logs.
 
-*(Placeholder for a security flow diagram, e.g., `./diagrams/key_transport_security.png`)*
+![Secure Key Transport Flow Diagram](https://www.mermaidchart.com/raw/51701fec-44ec-467f-9860-e18ded8b52a0?theme=light&version=v0.1&format=svg)
 
 By layering these controls—encrypting the key material at the source using AWS-provided public keys, transmitting over secure channels (TLS, private network), and using tightly scoped IAM permissions for the import API call—the transportation process achieves a high degree of security required for sensitive cryptographic material.
 
