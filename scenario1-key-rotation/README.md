@@ -149,7 +149,7 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
         *   Can be used to create dashboards visualizing the overall compliance status (e.g., number of compliant vs. non-compliant keys over time) based on metrics derived from Config/EventBridge events.
         *   Can trigger CloudWatch Alarms based on non-compliance events or Lambda errors.
 
-*(Placeholder for an architecture diagram, e.g., `./diagrams/monitoring_architecture.png`)*
+![Monitoring Architecture Diagram](https://www.mermaidchart.com/raw/b8938b86-b030-4747-91b3-17ed42f69390?theme=light&version=v0.1&format=svg)
 
 ### 5.2. Implementation Considerations
 
