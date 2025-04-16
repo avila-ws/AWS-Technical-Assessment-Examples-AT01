@@ -217,7 +217,15 @@ The actual API call to import the material must be secured:
     *   The **Encrypted Key Material** (as generated in Step 6.2).
     *   The **Expiration Model** (e.g., `KEY_MATERIAL_EXPIRES`) and optionally a `ValidTo` timestamp, dictating when the imported material automatically expires within KMS.
 
-### 
+### 6.5. Post-Import Verification and Auditing
+
+1.  **API Response:** Check for a successful response from the `ImportKeyMaterial` API call.
+2.  **Key State:** Verify the target CMK state in KMS remains `Enabled` and confirm the key material has been imported (details might be visible via `DescribeKey`, though not the material itself).
+3.  **CloudTrail Logging:** Ensure AWS CloudTrail is enabled and configured to capture the `ImportKeyMaterial` event. This log entry serves as a crucial audit record, timestamping the operation and identifying the principal who performed it. Regularly audit these logs.
+
+*(Placeholder for a security flow diagram, e.g., `./diagrams/key_transport_security.png`)*
+
+By layering these controls—encrypting the key material at the source using AWS-provided public keys, transmitting over secure channels (TLS, private network), and using tightly scoped IAM permissions for the import API call—the transportation process achieves a high degree of security required for sensitive cryptographic material.
 
 ## 7. Additional Considerations and Next Steps
 
