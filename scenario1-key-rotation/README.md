@@ -205,6 +205,20 @@ Even though the key material itself is encrypted, the channel used for transport
     *   **Recommended:** Transmit the import request over a private, dedicated network connection like **AWS Direct Connect** or a secure **VPN Site-to-Site** connection between the on-premise network and the AWS VPC. This avoids traversing the public internet.
     *   **Alternative (Less Secure):** If using the public internet, rely solely on TLS, ensuring strict endpoint validation on the client-side.
 
+### 6.4. Authenticated and Authorized Import Operation
+
+The actual API call to import the material must be secured:
+
+1.  **IAM Credentials:** Use AWS IAM credentials (e.g., an IAM user with access keys or temporary credentials from an IAM role) that have the *minimum necessary permissions*.
+2.  **Least Privilege:** The required permission is `kms:ImportKeyMaterial` *only* on the specific target CMK ARN. Avoid granting broader `kms:*` permissions. Consider using temporary credentials specifically generated for the key import ceremony.
+3.  **Import API Call:** Use the AWS CLI (`aws kms import-key-material`) or SDK to make the call, providing:
+    *   The target CMK ID/ARN.
+    *   The downloaded **Import Token**.
+    *   The **Encrypted Key Material** (as generated in Step 6.2).
+    *   The **Expiration Model** (e.g., `KEY_MATERIAL_EXPIRES`) and optionally a `ValidTo` timestamp, dictating when the imported material automatically expires within KMS.
+
+### 
+
 ## 7. Additional Considerations and Next Steps
 
 *(Content to be added later)*
