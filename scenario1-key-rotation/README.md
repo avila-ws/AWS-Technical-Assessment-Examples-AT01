@@ -4,7 +4,7 @@
 
 This scenario addresses a simulated regulatory requirement mandating periodic key rotation for all applicable AWS Key Management Service (KMS) Customer Master Keys (CMKs). The current environment utilizes a centralized KMS setup within a dedicated security account and employs the Bring Your Own Key (BYOK) model, importing key material generated from an on-premise Hardware Security Module (HSM).
 
-The primary goal is to define and implement a robust, secure, and minimally disruptive key rotation strategy that complies with this new requirement across different environments and services.
+The primary goal is to define and implement a robust, secure, and minimally disruptive key rotation strategy that complies with this new requirement across different environments and services. **This document outlines the challenges, proposes a rotation process, details a monitoring strategy, and describes secure key handling, addressing the key questions raised in the assessment scenario.**
 
 ## 2. Relevant Current Architecture
 
@@ -123,13 +123,7 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
     *   **Role:** Deploys a *custom rule* that periodically evaluates the compliance status of BYOK KMS keys.
 2.  **AWS Lambda:**
     *   **Purpose:** Provides the custom evaluation logic for the AWS Config rule.
-    *   **Role:** The Lambda function code will:
-        *   Receive the KMS key ARN (or identifier) as input from AWS Config.
-        *   Verify the key `Origin` is `EXTERNAL`.
-        *   Query **AWS CloudTrail** logs (using API calls like `lookup_events`) to find the timestamp of the *most recent successful* `ImportKeyMaterial` event for that specific key ARN.
-        *   Calculate the age of the imported key material based on the current date and the event timestamp.
-        *   Compare this age against the mandated rotation period (e.g., 365 days, configurable via Lambda environment variables or rule parameters).
-        *   Return the compliance status (`COMPLIANT` or `NON_COMPLIANT`) and annotation back to AWS Config.
+    *   **Role:** Its code queries CloudTrail for the latest `ImportKeyMaterial` event timestamp for the given key ARN (after verifying `Origin: EXTERNAL`), calculates the material's age, compares it to the defined policy period, and reports the `COMPLIANT`/`NON_COMPLIANT` status back to AWS Config.
 3.  **AWS CloudTrail:**
     *   **Purpose:** Logs API activity within the AWS account.
     *   **Role:** Provides the essential audit trail containing the `ImportKeyMaterial` events and their timestamps, which the Lambda function queries to determine the last rotation date. CloudTrail must be enabled and configured to log KMS events.
@@ -429,3 +423,6 @@ Completing these steps provides a comprehensive approach to implementing and man
     *   [Protecting data using server-side encryption with KMS keys stored in AWS KMS (SSE-KMS) - S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html)
     *   [Using server-side encryption for data at rest in DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html)
     *   [Encrypting Amazon RDS resources](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html)
+
+---
+*This concludes the detailed analysis and proposed solution for Scenario 1.*
