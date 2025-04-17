@@ -54,6 +54,11 @@ The current API architecture, while functional, presents several significant wea
 
 To address the weaknesses identified, particularly the universal public exposure and inefficient internal routing, we propose a revised architecture focused on leveraging VPC endpoints and potentially distinct API Gateway deployments for different exposure levels. The goal is simplicity, efficiency, and minimal disruption compared to the current setup.
 
+**Core Concepts of the Proposed Architecture:**
+
+1.  **Introduce VPC Interface Endpoint for API Gateway (`execute-api`):**
+    *   **Mechanism:** Deploy an **Interface VPC Endpoint** for the `execute-api` service within the VPC(s) where internal clients reside.
+    *   **Benefit:** This creates a private entry point to access regional API Gateway APIs *directly from within the VPC* using private IP addresses, completely bypassing the public internet, CloudFront, and the Global WAF for internal traffic. This significantly reduces latency and potential egress costs for internal calls.
 
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
