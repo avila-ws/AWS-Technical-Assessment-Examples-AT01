@@ -63,4 +63,54 @@ module "iam" {
   backup_iam_role_name = var.backup_iam_role_name # Pass through optional name
 }
 
+# --- Backup Plan ---
+
+resource "aws_backup_plan" "main" {
+  name = local.plan_name
+  tags = merge(var.tags, {
+    Name = local.plan_name
+  })
+
+  rule {
+    rule_name         = "${local.plan_name}-primary-rule"
+    target_vault_name = aws_backup_vault.primary.name
+    schedule          = var.backup_schedule
+
+    # Primary retention
+    lifecycle {
+      delete_after = var.primary_retention_days
+    }
+
+    # Cross-Region Copy Action (Dynamic)
+    dynamic "copy_action" {
+      for_each = local.copy_actions.cross_region != null ? { cross_region = local.copy_actions.cross_region } : {}
+      content {
+        destination_vault_arn = copy_action.value.destination_vault_arn
+        lifecycle {
+          delete_after = copy_action.value.retention_days
+        }
+        # Note: Terraform AWS provider does not currently support specifying KMS key for copy_action lifecycle.
+        # It will use the destination vault's default or configured key implicitly.
+        # If a specific key is needed, ensure the *destination vault* is configured with it.
+      }
+    }
+
+    # Cross-Account Copy Action (Dynamic)
+    dynamic "copy_action" {
+      for_each = local.copy_actions.cross_account != null ? { cross_account = local.copy_actions.cross_account } : {}
+      content {
+        destination_vault_arn = copy_action.value.destination_vault_arn
+        lifecycle {
+          delete_after = copy_action.value.retention_days
+        }
+        # Same KMS note as above applies here.
+      }
+    }
+
+    # recovery_point_tags could be added here if needed
+  }
+
+  # advanced_backup_setting could be added here (e.g., for specific resource types like Windows VSS)
+}
+
 # ---
