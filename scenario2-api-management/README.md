@@ -133,7 +133,6 @@ The current architecture already implies that CloudFront needs to route requests
 
 By correctly configuring multiple Origins (one per target API GW) and Cache Behaviors (matching specific URL path patterns to those Origins), CloudFront can effectively act as a central router or reverse proxy for the multiple backend API Gateways.
 
-
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
 *(Content to be added)*
