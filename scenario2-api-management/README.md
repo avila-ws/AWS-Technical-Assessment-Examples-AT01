@@ -49,18 +49,11 @@ The current API architecture, while functional, presents several significant wea
 6.  **Management Complexity:**
     *   **Issue:** Managing multiple independent API Gateways developed by different teams without strong governance can lead to inconsistencies in configuration, stage deployment, logging, monitoring, and adherence to standards.
     *   **Risk:** Increased operational burden, potential for configuration drift, and difficulties in maintaining a unified view of the entire API landscape.
-    
-
-
-
-    
-
-
-
 
 ## 4. Question 2: Redesign for Private API Exposure
 
-*(Content to be added)*
+To address the weaknesses identified, particularly the universal public exposure and inefficient internal routing, we propose a revised architecture focused on leveraging VPC endpoints and potentially distinct API Gateway deployments for different exposure levels. The goal is simplicity, efficiency, and minimal disruption compared to the current setup.
+
 
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
