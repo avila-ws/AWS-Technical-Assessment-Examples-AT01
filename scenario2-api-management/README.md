@@ -170,7 +170,7 @@ The **Custom Header Validation method, ideally implemented using AWS WAF Regiona
 
 ## 7. Proposed Architecture Diagram
 
-*(Placeholder for the proposed architecture diagram, e.g., `./diagrams/scenario2-proposed-architecture.png`)*
+![Proposed API Architecture](./diagrams/scenario2-proposed-architecture.png)
 
 ## 8. Additional Considerations (Security, Governance, Cost)
 
