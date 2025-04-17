@@ -94,7 +94,6 @@ If absolute network isolation for internal APIs is paramount, or if managing dif
 
 *(The Proposed Architecture Diagram in Section 7 should illustrate the chosen option, likely Option A initially, showing both traffic paths).*
 
-
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
 *(Content to be added)*
