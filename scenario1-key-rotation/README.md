@@ -16,7 +16,7 @@ The existing encryption implementation, illustrated in the provided assessment d
 *   **Key Aliases:** KMS key aliases (e.g., `alias/service-environment`) are used to reference keys, abstracting applications from specific key IDs. This is crucial for simplifying rotation.
 *   **Least Privilege:** Key policies are implemented following the principle of least privilege, granting only necessary permissions to users and services.
 
-![Current Architecture Overview](./diagrams/architecture_overview_diagram_source/current_architecture_overview.png)
+![Diagram: Overview of centralized KMS with BYOK, aliases, and HSM source](./diagrams/architecture_overview_diagram_source/current_architecture_overview.png)
 
 ## 3. Question 1: Key Rotation Challenges and Impacts
 
@@ -36,7 +36,7 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
     *   **Challenge:** Tables encrypted with KMS (SSE-KMS) using a Customer Managed Key (CMK) handle key reference typically via alias. When the alias points to a new key/version, *newly written data* will use that new key. AWS manages the background encryption process. Similar to S3, DynamoDB *does not automatically re-encrypt all existing data* immediately upon alias change or key material rotation. Re-encryption happens over time as data is naturally rewritten or potentially through a full table export/import or backup/restore cycle if immediate compliance is mandated for all data.
     *   **Impact:** Potential performance implications during periods of heavy writes or explicit re-encryption activities. The primary impact is ensuring compliance timelines align with how DynamoDB handles key changes for existing data.
 
-![Diagram Comparing Service-Specific Key Rotation Impacts](./diagrams/service_specific_challenges_diagram/service_specific_challenges.png)
+![Diagram: Comparison of key rotation impact on S3, RDS, and DynamoDB existing data](./diagrams/service_specific_challenges_diagram/service_specific_challenges.png)
 ### 3.2. Operational Challenges
 
 *   **Coordination:** Managing rotation across multiple environments (Dev, Int, Prod) and various service teams requires significant coordination and planning.
@@ -100,7 +100,7 @@ The key rotation process for BYOK keys requires careful planning and execution. 
 *   **Documentation:** Update operational runbooks, CMDBs, or documentation to reflect the completed rotation cycle and the timestamp.
 *   **Lessons Learned:** Conduct a brief retrospective to identify improvements for the next rotation cycle.
 
-![Key Rotation Process Flow](./diagrams/key_rotation_diagram_source_files/key_rotation_process_flow.png)
+![Diagram: High-level 4-phase flow for BYOK key rotation process](./diagrams/key_rotation_diagram_source_files/key_rotation_process_flow.png)
 
 ### 4.5. Automation and DevSecOps Considerations
 
@@ -148,7 +148,7 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
         *   Can be used to create dashboards visualizing the overall compliance status (e.g., number of compliant vs. non-compliant keys over time) based on metrics derived from Config/EventBridge events.
         *   Can trigger CloudWatch Alarms based on non-compliance events or Lambda errors.
 
-![Monitoring Architecture Diagram](./diagrams/monitoring_architecture_diagram_source_files/monitoring_architecture.png)
+![Diagram: Architecture for monitoring BYOK key material age using AWS Config, Lambda, CloudTrail](./diagrams/monitoring_architecture_diagram_source_files/monitoring_architecture.png)
 
 ### 5.2. Implementation Considerations
 
@@ -285,7 +285,7 @@ The actual API call to import the material must be secured:
 2.  **Key State:** Verify the target CMK state in KMS remains `Enabled` and confirm the key material has been imported (details might be visible via `DescribeKey`, though not the material itself).
 3.  **CloudTrail Logging:** Ensure AWS CloudTrail is enabled and configured to capture the `ImportKeyMaterial` event. This log entry serves as a crucial audit record, timestamping the operation and identifying the principal who performed it. Regularly audit these logs.
 
-![Secure Key Transport Flow Diagram](./diagrams/key_transport_diagram_source_files/key_transport_security.png)
+![Diagram: Secure flow for transporting key material from on-prem HSM to AWS KMS (BYOK import)](./diagrams/key_transport_diagram_source_files/key_transport_security.png)
 
 By layering these controls—encrypting the key material at the source using AWS-provided public keys, transmitting over secure channels (TLS, private network), and using tightly scoped IAM permissions for the import API call—the transportation process achieves a high degree of security required for sensitive cryptographic material.
 
