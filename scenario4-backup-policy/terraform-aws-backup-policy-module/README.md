@@ -88,32 +88,41 @@ output "required_cross_account_policy" {
 
 ## INPUTS
 
-| Name                                      | Description                                                                 | Type          | Default                        | Required               |
-|-------------------------------------------|-----------------------------------------------------------------------------|---------------|-------------------------------|------------------------|
-| policy_name                               | A unique name for the backup policy resources (plan, selection, vaults).   | string        | -                             | yes                    |
-| tags                                      | A map of tags to apply to the created resources (plan, vaults, role).      | map(string)   | {}                            | no                     |
-| backup_schedule                           | Cron expression for the backup frequency.                                   | string        | "cron(0 5 ? * * *)"          | no                     |
-| primary_retention_days                   | Number of days to retain backups in the primary vault.                     | number        | 35                            | no                     |
-| primary_kms_key_arn                      | ARN of the KMS key used to encrypt backups in the primary vault.           | string        | -                             | yes                    |
-| resource_selection_tag_key_1              | The key of the first tag used for resource selection.                       | string        | "ToBackup"                    | no                     |
-| resource_selection_tag_value_1            | The value of the first tag used for resource selection.                     | string        | "true"                        | no                     |
-| resource_selection_tag_key_2              | The key of the second tag used for resource selection.                      | string        | "Owner"                       | no                     |
-| resource_selection_tag_value_2            | The value of the second tag used for resource selection (e.g., email address). | string        | -                             | yes                    |
-| primary_vault_name                       | Optional specific name for the primary backup vault. Defaults to <policy_name>-primary-vault-<region>. | string        | null                          | no                     |
-| enable_primary_vault_lock                | If true, enables Vault Lock (WORM) on the primary vault.                   | bool          | true                          | no                     |
-| vault_lock_min_retention_days            | Minimum retention period in days for Vault Lock (>= 1).                    | number        | 7                             | no                     |
-| vault_lock_max_retention_days            | Maximum retention period in days for Vault Lock.                            | number        | 3650                          | no                     |
-| vault_lock_changeable_for_days           | Number of days the Vault Lock is changeable before being locked immutably (>= 3). | number        | 3                             | no                     |
-| enable_cross_region_copy                 | If true, enables copying backups to a different region within the same account. | bool          | true                          | no                     |
-| cross_region_destination_vault_arn       | ARN of the pre-existing Backup Vault in the destination region.             | string        | null                          | yes (if enabled)       |
-| cross_region_copy_retention_days         | Number of days to retain backups in the cross-region destination vault.     | number        | 180                           | no                     |
-| cross_region_copy_kms_key_arn            | Optional: ARN of the KMS key in the destination region to encrypt copies.   | string        | null                          | no                     |
-| enable_cross_account_copy                 | If true, enables copying backups to a different AWS account.                | bool          | true                          | no                     |
-| cross_account_destination_vault_arn      | ARN of the pre-existing Backup Vault in the destination account.            | string        | null                          | yes (if enabled)       |
-| cross_account_copy_retention_days        | Number of days to retain backups in the cross-account destination vault.    | number        | 365                           | no                     |
-| cross_account_copy_kms_key_arn           | Optional: ARN of the KMS key in the destination account/region to encrypt copies. | string        | null                          | no                     |
-| source_account_id                         | AWS Account ID where this module runs (for cross-account policy). Can often be derived via data source. | string        | null                          | yes (if enabled)       |
-| backup_iam_role_name                     | Optional specific name for the AWS Backup IAM role. Defaults to <policy_name>-backup-role. | string        | null                          | no                     |
+| **Name**                                | **Description**                                                                                         | **Type**    | **Default**         | **Required**     |
+|-----------------------------------------|---------------------------------------------------------------------------------------------------------|-------------|---------------------|------------------|
+| **policy_name**                         | A unique name for the backup policy resources (plan, selection, vaults).                                | string      | -                   | yes              |
+| **tags**                                | A map of tags to apply to the created resources (plan, vaults, role).                                   | map(string) | {}                  | no               |
+| **backup_schedule**                     | Cron expression for the backup frequency.                                                               | string      | "cron(0 5 ? * * *)" | no               |
+| **primary_retention_days**              | Number of days to retain backups in the primary vault.                                                  | number      | 35                  | no               |
+| **primary_kms_key_arn**                 | ARN of the KMS key used to encrypt backups in the primary vault.                                        | string      | -                   | yes              |
+| **resource_selection_tag_key_1**        | The key of the first tag used for resource selection.                                                   | string      | "ToBackup"          | no               |
+| **resource_selection_tag_value_1**      | The value of the first tag used for resource selection.                                                 | string      | "true"              | no               |
+| **resource_selection_tag_key_2**        | The key of the second tag used for resource selection.                                                  | string      | "Owner"             | no               |
+| **resource_selection_tag_value_2**      | The value of the second tag used for resource selection (e.g., email address).                          | string      | -                   | yes              |
+| **primary_vault_name**                  | Optional specific name for the primary backup vault. Defaults to <policy_name>-primary-vault-<region>.  | string      | null                | no               |
+| **enable_primary_vault_lock**           | If true, enables Vault Lock (WORM) on the primary vault.                                                | bool        | true                | no               |
+| **vault_lock_min_retention_days**       | Minimum retention period in days for Vault Lock (>= 1).                                                 | number      | 7                   | no               |
+| **vault_lock_max_retention_days**       | Maximum retention period in days for Vault Lock.                                                        | number      | 3650                | no               |
+| **vault_lock_changeable_for_days**      | Number of days the Vault Lock is changeable before being locked immutably (>= 3).                       | number      | 3                   | no               |
+| **enable_cross_region_copy**            | If true, enables copying backups to a different region within the same account.                         | bool        | true                | no               |
+| **cross_region_destination_vault_arn**  | ARN of the pre-existing Backup Vault in the destination region.                                         | string      | null                | yes (if enabled) |
+| **cross_region_copy_retention_days**    | Number of days to retain backups in the cross-region destination vault.                                 | number      | 180                 | no               |
+| **cross_region_copy_kms_key_arn**       | Optional: ARN of the KMS key in the destination region to encrypt copies.                               | string      | null                | no               |
+| **enable_cross_account_copy**           | If true, enables copying backups to a different AWS account.                                            | bool        | true                | no               |
+| **cross_account_destination_vault_arn** | ARN of the pre-existing Backup Vault in the destination account.                                        | string      | null                | yes (if enabled) |
+| **cross_account_copy_retention_days**   | Number of days to retain backups in the cross-account destination vault.                                | number      | 365                 | no               |
+| **cross_account_copy_kms_key_arn**      | Optional: ARN of the KMS key in the destination account/region to encrypt copies.                       | string      | null                | no               |
+| **source_account_id**                   | AWS Account ID where this module runs (for cross-account policy). Can often be derived via data source. | string      | null                | yes (if enabled) |
+| **backup_iam_role_name**                | Optional specific name for the AWS Backup IAM role. Defaults to <policy_name>-backup-role.              | string      | null                | no               |
 
+## Outputs
 
-## 
+| **Name**                                        | **Description**                                                                                                 |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| **backup_plan_arn**                             | The ARN of the created AWS Backup Plan.                                                                         |
+| **backup_plan_id**                              | The ID of the created AWS Backup Plan.                                                                          |
+| **primary_backup_vault_arn**                    | The ARN of the primary AWS Backup Vault created by the module.                                                  |
+| **primary_backup_vault_name**                   | The Name of the primary AWS Backup Vault created by the module.                                                 |
+| **backup_iam_role_arn**                         | The ARN of the IAM role created for AWS Backup service.                                                         |
+| **backup_iam_role_name**                        | The Name of the IAM role created for AWS Backup service.                                                        |
+| **cross_account_destination_vault_policy_json** | [Conditional] JSON policy document that MUST be applied to the cross-account destination vault to allow copies. |
