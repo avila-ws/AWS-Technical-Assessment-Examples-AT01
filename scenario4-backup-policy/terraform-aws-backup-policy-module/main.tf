@@ -42,4 +42,15 @@ resource "aws_backup_vault" "primary" {
   })
 }
 
-# --
+# --- Primary Vault Lock Configuration (Conditional) ---
+
+resource "aws_backup_vault_lock_configuration" "primary_lock" {
+  count = var.enable_primary_vault_lock ? 1 : 0
+
+  backup_vault_name           = aws_backup_vault.primary.name
+  min_retention_days          = var.vault_lock_min_retention_days
+  max_retention_days          = var.vault_lock_max_retention_days
+  changeable_for_days         = var.vault_lock_changeable_for_days
+}
+
+# ---
