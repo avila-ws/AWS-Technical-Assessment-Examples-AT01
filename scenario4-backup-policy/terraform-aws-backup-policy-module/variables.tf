@@ -61,4 +61,22 @@ variable "resource_selection_tag_value_2" {
   # No default - must be provided
 }
 
-# ---
+# --- Vault Configuration ---
+
+variable "primary_vault_name" {
+  description = "Optional specific name for the primary backup vault. Defaults to '<policy_name>-primary-vault'."
+  type        = string
+  default     = null
+}
+
+variable "enable_primary_vault_lock" {
+  description = "If true, enables Vault Lock (WORM) on the primary vault."
+  type        = bool
+  default     = true # Default based on requirements
+}
+
+variable "vault_lock_min_retention_days" {
+  description = "Minimum retention period in days for Vault Lock. Must be >= 1."
+  type        = number
+  default     = 7
+}
