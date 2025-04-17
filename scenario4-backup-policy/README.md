@@ -123,7 +123,24 @@ output "required_cross_account_policy" {
 
 ## 6. References
 
-*(Placeholder: Links to AWS Backup, Terraform AWS Provider documentation).*
+*   **AWS Backup Documentation:**
+    *   [AWS Backup Developer Guide](https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html)
+    *   [Working with Backup Plans](https://docs.aws.amazon.com/aws-backup/latest/devguide/about-backup-plans.html)
+    *   [Working with Backup Vaults](https://docs.aws.amazon.com/aws-backup/latest/devguide/about-backup-vaults.html)
+    *   [AWS Backup Vault Lock](https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html)
+    *   [Assigning resources using tags](https://docs.aws.amazon.com/aws-backup/latest/devguide/assigning-resources.html#assigning-resources-tags)
+    *   [Cross-account backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-account-backup.html)
+    *   [Cross-region backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/cross-region-backup.html)
+    *   [Using service-linked roles for AWS Backup](https://docs.aws.amazon.com/aws-backup/latest/devguide/iam-service-linked-role.html) (Mentions the IAM role used)
+*   **Terraform AWS Provider Documentation:**
+    *   [AWS Provider - Backup Resources](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_plan) (Navega desde aquí a `aws_backup_vault`, `aws_backup_selection`, `aws_backup_vault_lock_configuration`, `aws_backup_vault_policy`)
+    *   [Resource: aws_backup_plan](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_plan)
+    *   [Resource: aws_backup_vault](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_vault)
+    *   [Resource: aws_backup_selection](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_selection)
+    *   [Resource: aws_backup_vault_lock_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_vault_lock_configuration)
+    *   [Resource: aws_backup_vault_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/backup_vault_policy) (Importante para aplicar la política cross-account)
+    *   [Resource: aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role)
+    *   [Data Source: aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document)
 
 ---
 *This concludes the analysis and plan for Scenario 4.* 
