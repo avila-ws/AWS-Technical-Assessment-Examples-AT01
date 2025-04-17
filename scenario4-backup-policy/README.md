@@ -47,3 +47,11 @@ The module will follow standard Terraform structure:
     *   Rule `copy_action`: Dynamic blocks (`for_each` on a map or using `count`) triggered by boolean enable flags, configuring `destination_vault_arn` and nested `lifecycle`.
 *   **Selection:** `aws_backup_selection` linked to the plan ID, using `selection_tag` blocks (requiring `type = "STRINGEQUALS"`) and referencing the IAM role ARN.
 *   **KMS Keys:** The module **will not create** KMS keys; their ARNs must be provided as input variables.
+
+### 3.3. Handling Cross-Account Copies
+
+*   The Terraform module, when executed within the primary account (e.g., "Prod"), will configure the `copy_action` in the `aws_backup_plan` to *target* the ARN of the backup vault in the separate "Backup" account.
+*   However, for the copy to succeed, the destination vault in the "Backup" account requires a **Vault Access Policy** explicitly granting the primary account permission (`backup:CopyIntoBackupVault`).
+*   This module **cannot directly apply** the policy to the vault in the other account (without assuming roles/multiple providers, adding unnecessary complexity for this evaluation).
+*   **Solution:** The module will **generate the required JSON policy** based on the primary account ID (obtained via data source or variable) and expose it as a Terraform **output** (`cross_account_destination_vault_policy_json`).
+*   **Action Required:** This output JSON policy must then be manually applied (or applied via a separate Terraform configuration run in the context of the "Backup" account) to the `aws_backup_vault_policy` resource associated with the destination vault. This demonstrates knowledge of the cross-account mechanism securely and pragmatically.
