@@ -190,7 +190,7 @@ Implementing the proposed architecture requires attention to several related asp
     *   **Private API Gateways (Option B):** If chosen, deploying additional Private API Gateways incurs extra costs compared to reusing existing Regional gateways.
     *   **WAF Regional:** Using Regional WAF ACLs incurs costs based on the number of ACLs, rules, and requests processed.
     *   **Lambda Authorizer:** Complex logic might increase execution time/cost, although caching responses can mitigate this.
-*   **Monitoring and Logging:** Ensure comprehensive logging (CloudFront access logs, API Gateway execution logs, WAF logs, Lambda logs) and monitoring (CloudWatch metrics for latency, errors, throttle counts for both API Gateway and VPC Endpoint) are configured for visibility into both public and private traffic paths.
+*   **Monitoring and Logging:** Ensure comprehensive logging (CloudFront access logs, API Gateway execution logs, WAF logs, Lambda logs) and monitoring (CloudWatch metrics for latency, errors, throttle counts for both API Gateway and VPC Endpoint) are configured for visibility into both public and private traffic paths. 
 
 ## 9. References
 
