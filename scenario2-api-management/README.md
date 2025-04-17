@@ -86,6 +86,14 @@ To address the weaknesses identified, particularly the universal public exposure
         *   **Option A:** The authorizer may need logic to differentiate between calls coming via the public CloudFront path vs. the private VPC Endpoint path (e.g., inspecting source IP, presence/absence of specific headers injected by CloudFront) to apply potentially different authorization rules.
         *   **Option B:** Private API Gateways could potentially use simpler authorization mechanisms (e.g., Resource Policies restricting source VPC/Endpoint, simpler Lambda logic, or even IAM authorization if services use IAM roles) since the network path is already trusted. The existing Lambda Authorizer would remain primarily for the Regional (public/mixed) APIs.
 
+**Recommended Approach (Balancing Simplicity and Security):**
+
+While Option B offers stronger isolation, **Option A (Private + Public access on SAME Regional Gateway via VPC Endpoint)** often provides the best balance of achieving the core requirements (internal traffic stays private) with **simplicity and minimal disruption** to the existing setup, aligning with the request for an efficient, low-impact solution. This requires careful implementation of Private DNS for the VPC endpoint and potentially adjusting the Lambda Authorizer logic.
+
+If absolute network isolation for internal APIs is paramount, or if managing differentiated authorization on the same gateway proves too complex, then Option B becomes the preferred choice despite the added deployment overhead.
+
+*(The Proposed Architecture Diagram in Section 7 should illustrate the chosen option, likely Option A initially, showing both traffic paths).*
+
 
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
