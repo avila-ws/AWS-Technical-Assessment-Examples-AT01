@@ -62,6 +62,8 @@ The core logic resides within the `terraform-aws-backup-policy-module` directory
 
 *   **`variables.tf`:** Defines all configurable input parameters for the module, such as policy names, schedules, retention periods, KMS key ARNs, tags for resource selection, destination vault ARNs, and feature flags (e.g., enabling copies, Vault Lock). *(Refer to the module's internal README or `variables.tf` file for the full list and descriptions).*
 
+*   **`iam.tf`:** Creates the necessary IAM Role (`aws_iam_role`) with the appropriate trust policy for the AWS Backup service and attaches the required managed policy (`AWSBackupServiceRolePolicyForBackup`) via `aws_iam_policy_attachment`.
+
 
 ## 5. Example Module Usage
 
