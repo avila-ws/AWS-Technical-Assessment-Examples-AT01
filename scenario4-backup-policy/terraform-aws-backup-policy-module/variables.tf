@@ -138,3 +138,17 @@ variable "cross_account_copy_retention_days" {
   type        = number
   default     = 365 # Default: 1 year
 }
+
+variable "cross_account_copy_kms_key_arn" {
+  description = "Optional: ARN of the KMS key in the destination account/region to encrypt the copied backups. If null, uses the AWS Backup service default key there."
+  type        = string
+  default     = null
+}
+
+variable "source_account_id" {
+  description = "The AWS Account ID where this module is deployed. Used for generating the destination vault policy output. Can often be derived via data source."
+  type        = string
+  default     = null # Can be retrieved using 'data "aws_caller_identity" "current" {}'
+}
+
+# ---
