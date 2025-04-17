@@ -35,4 +35,30 @@ variable "primary_kms_key_arn" {
   # No default - must be provided
 }
 
+# --- Backup Selection: Tag-Based ---
+
+variable "resource_selection_tag_key_1" {
+  description = "The key of the first tag used for resource selection."
+  type        = string
+  default     = "ToBackup"
+}
+
+variable "resource_selection_tag_value_1" {
+  description = "The value of the first tag used for resource selection."
+  type        = string
+  default     = "true"
+}
+
+variable "resource_selection_tag_key_2" {
+  description = "The key of the second tag used for resource selection."
+  type        = string
+  default     = "Owner"
+}
+
+variable "resource_selection_tag_value_2" {
+  description = "The value of the second tag used for resource selection (e.g., email address)."
+  type        = string
+  # No default - must be provided
+}
+
 # ---
