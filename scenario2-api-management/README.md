@@ -60,6 +60,20 @@ To address the weaknesses identified, particularly the universal public exposure
     *   **Mechanism:** Deploy an **Interface VPC Endpoint** for the `execute-api` service within the VPC(s) where internal clients reside.
     *   **Benefit:** This creates a private entry point to access regional API Gateway APIs *directly from within the VPC* using private IP addresses, completely bypassing the public internet, CloudFront, and the Global WAF for internal traffic. This significantly reduces latency and potential egress costs for internal calls.
 
+2.  **API Classification and Deployment Strategy (Option-Based):**
+    *   Identify and classify APIs into three categories:
+        *   **Internal-Only APIs:** Only consumed by applications within the VPC.
+        *   **Public-Only APIs:** Only consumed by external clients via the internet.
+        *   **Mixed-Use APIs:** Consumed by *both* internal and external clients.
+    *   Based on this classification, choose a deployment strategy (two main options):
+
+        *   **Option A (Simpler, leverages existing Gateways): Private + Public access on the SAME Regional Gateway:**
+            *   Keep the existing **Regional** API Gateway endpoints (or potentially consolidate slightly if feasible). These endpoints remain accessible publicly via CloudFront/WAF for external consumers.
+            *   Internal clients access these *same* regional API Gateways *privately* via the newly created **VPC Interface Endpoint**.
+            *   **How it works:** When configured correctly (with Private DNS enabled for the VPC Endpoint), DNS queries for the `execute-api` hostname from within the VPC resolve to the private IPs of the endpoint, while public queries resolve to public IPs.
+            *   **Pros:** Minimal disruption to existing API Gateway deployments and CloudFront setup. Reuses existing infrastructure. Simpler to manage initially.
+            *   **Cons:** Internal-only APIs are still technically *reachable* via the public endpoint (though potentially blocked by fine-grained authorization if the Lambda authorizer can differentiate callers). Requires careful routing and potentially different authorization logic based on caller source (VPC vs. Internet).
+
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
 *(Content to be added)*
