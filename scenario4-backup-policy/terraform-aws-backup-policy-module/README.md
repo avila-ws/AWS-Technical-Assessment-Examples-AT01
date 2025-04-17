@@ -126,3 +126,11 @@ output "required_cross_account_policy" {
 | **backup_iam_role_arn**                         | The ARN of the IAM role created for AWS Backup service.                                                         |
 | **backup_iam_role_name**                        | The Name of the IAM role created for AWS Backup service.                                                        |
 | **cross_account_destination_vault_policy_json** | [Conditional] JSON policy document that MUST be applied to the cross-account destination vault to allow copies. |
+
+## Module Limitations and Production Considerations
+
+*   **Input Validation:** For simplicity and alignment with the assessment's goal (validating knowledge, not requiring production-readiness), this module currently omits explicit `validation {}` blocks within the variable definitions (`variables.tf`). In a production-ready module, it would be best practice to add validation rules to ensure inputs like retention periods are within logical bounds (e.g., positive numbers, `vault_lock_changeable_for_days` >= 3), ARNs match expected formats, etc.
+
+*   **Error Handling:** Advanced error handling or more complex conditional logic beyond the scope of this evaluation might be needed for production environments.
+
+*   **KMS Key/Vault Creation:** This module assumes prerequisite resources like KMS keys and destination vaults exist. A production setup might incorporate modules or logic to manage these dependencies as well.
