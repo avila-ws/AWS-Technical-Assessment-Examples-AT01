@@ -12,7 +12,8 @@ locals {
   primary_vault_name = coalescelist([var.primary_vault_name, "${var.policy_name}-primary-vault-${data.aws_region.current.name}"])[0]
   plan_name          = "${var.policy_name}-backup-plan"
   selection_name     = "${var.policy_name}-resource-selection"
-  iam_role_arn       = module.iam.backup_role_arn # Get ARN from the IAM module part
+  # Directly reference the ARN of the IAM role defined in iam.tf
+  iam_role_arn       = aws_iam_role.backup_role.arn
 
   # Use account ID from variable, fallback to data source
   source_account_id = coalesce(var.source_account_id, data.aws_caller_identity.current.account_id)
@@ -53,15 +54,6 @@ resource "aws_backup_vault_lock_configuration" "primary_lock" {
   changeable_for_days         = var.vault_lock_changeable_for_days # Cooling-off period
 }
 
-# --- IAM Role (Defined in iam.tf) ---
-# Reference the role ARN output from the iam module/file.
-# Assumes iam.tf defines the role and outputs its ARN.
-module "iam" {
-  source            = "./iam.tf" # Placeholder if using a true submodule structure. Remove if iam.tf is in the same directory.
-  role_name_prefix  = "${var.policy_name}-backup-role"
-  tags              = var.tags
-  backup_iam_role_name = var.backup_iam_role_name # Pass through optional custom role name
-}
 
 # --- Backup Plan ---
 
@@ -120,7 +112,7 @@ resource "aws_backup_plan" "main" {
 
 resource "aws_backup_selection" "tag_based" {
   name            = local.selection_name
-  iam_role_arn    = local.iam_role_arn # Reference the ARN from the IAM definition
+  iam_role_arn    = local.iam_role_arn # Reference the ARN from the IAM role defined in iam.tf
   plan_id         = aws_backup_plan.main.id
 
   # Define tags for selection (Resources MUST match BOTH tags)
