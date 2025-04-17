@@ -120,23 +120,19 @@ resource "aws_backup_selection" "tag_based" {
   iam_role_arn    = local.iam_role_arn # Reference the ARN from the IAM definition
   plan_id         = aws_backup_plan.main.id
 
-  # Define tags for selection (MUST match BOTH)
+  # Define tags for selection (Resources MUST match BOTH tags)
   selection_tag {
-    type  = "STRINGEQUALS"
-    key   = var.resource_selection_tag_key_1
-    value = var.resource_selection_tag_value_1
+    type  = "STRINGEQUALS" # Condition type
+    key   = var.resource_selection_tag_key_1 # First tag key from variable
+    value = var.resource_selection_tag_value_1 # First tag value from variable
   }
 
   selection_tag {
-    type  = "STRINGEQUALS"
-    key   = var.resource_selection_tag_key_2
-    value = var.resource_selection_tag_value_2
+    type  = "STRINGEQUALS" # Condition type
+    key   = var.resource_selection_tag_key_2 # Second tag key from variable
+    value = var.resource_selection_tag_value_2 # Second tag value from variable
   }
 
-  # Optionally add conditions or list of resource ARNs if needed via 'condition' or 'resources' blocks
-
-  # Apply selection tags if provided in var.tags
-  tags = merge(var.tags, {
-    Name = local.selection_name
-  })
+  # 'condition' or 'resources' blocks could optionally be added here for more complex selection logic.
+  # Removed 'tags' argument here as it's not supported by this resource type.
 }
