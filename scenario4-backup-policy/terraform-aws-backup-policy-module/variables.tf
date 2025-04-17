@@ -93,4 +93,30 @@ variable "vault_lock_changeable_for_days" {
   default     = 3
 }
 
+# --- Cross-Region Copy Configuration (Optional) ---
+
+variable "enable_cross_region_copy" {
+  description = "If true, enables copying backups to a different region within the same account."
+  type        = bool
+  default     = true # Default based on requirements
+}
+
+variable "cross_region_destination_vault_arn" {
+  description = "ARN of the pre-existing Backup Vault in the destination region (e.g., Ireland)."
+  type        = string
+  default     = null # Required if enable_cross_region_copy is true
+}
+
+variable "cross_region_copy_retention_days" {
+  description = "Number of days to retain backups in the cross-region destination vault."
+  type        = number
+  default     = 180 # Default: 6 months
+}
+
+variable "cross_region_copy_kms_key_arn" {
+  description = "Optional: ARN of the KMS key in the destination region to encrypt the copied backups. If null, uses the AWS Backup service default key in that region."
+  type        = string
+  default     = null
+}
+
 # ---
