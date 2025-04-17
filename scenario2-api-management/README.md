@@ -18,7 +18,7 @@ Based on the provided diagram and technical details, the current API deployment 
 *   **Design Philosophy:** A key point mentioned is that *all APIs are currently public "by design"*, accessible via the single CloudFront endpoint.
 *   **(Diagram/Text Discrepancy Noted):** The provided diagram includes an icon labeled "Regional waf" positioned between the Global WAF and the API Gateways. However, the technical details only explicitly mention the *Global* WAF associated with CloudFront. AWS WAF deployment patterns typically involve either Global WAF (on CloudFront) OR Regional WAF (on regional resources like API Gateway/ALB), not usually in direct series for the same CloudFront-originating traffic. We will proceed assuming the primary current defense is the Global WAF as stated in the text, but will address the *need* for regional-level protection (potentially via Regional WAF on API GW or other mechanisms) as part of the weaknesses (Q1) and bypass protection solutions (Q4).
 
-![Current API Architecture (Illustrating Weaknesses)](./diagrams//architecture-weaknesses/scenario2-current-architecture-weaknesses.png)
+![Current API Architecture (Illustrating Weaknesses)](./diagrams/architecture-weaknesses/scenario2-current-architecture-weaknesses.png)
 
 ## 3. Question 1: Weaknesses in the Current Architecture
 
