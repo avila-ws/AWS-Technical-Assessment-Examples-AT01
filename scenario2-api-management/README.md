@@ -194,7 +194,24 @@ Implementing the proposed architecture requires attention to several related asp
 
 ## 9. References
 
-*(Content to be added)*
+*   **Amazon API Gateway:**
+    *   [Creating a private API in Amazon API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-private-apis.html)
+    *   [Using interface VPC endpoints to access API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-private-api-test-invoke-url.html)
+    *   [Controlling access to APIs with Lambda authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html)
+    *   [Working with AWS WAF to protect your APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-aws-waf.html)
+    *   [Using resource policies for API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-resource-policies.html)
+*   **Amazon CloudFront:**
+    *   [Routing requests based on path pattern](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesPathPattern)
+    *   [Adding custom headers to origin requests](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/add-origin-custom-headers.html)
+    *   [Restricting access to an Amazon API Gateway origin](https://aws.amazon.com/premiumsupport/knowledge-center/api-gateway-cloudfront-access/) (Knowledge Center - Often discusses custom headers)
+*   **AWS WAF:**
+    *   [AWS WAF Developer Guide](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html)
+    *   [Working with Regional WAF Web ACLs](https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-regional.html)
+*   **AWS PrivateLink (VPC Endpoints):**
+    *   [Interface VPC Endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html)
+*   **AWS Shield:**
+    *   [AWS Shield Advanced features](https://docs.aws.amazon.com/waf/latest/developerguide/ddos-overview.html#ddos-advanced)
+    
 
 ---
 *This concludes the detailed analysis and proposed solution for Scenario 2.*
