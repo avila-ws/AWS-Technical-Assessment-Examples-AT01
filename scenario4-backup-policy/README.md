@@ -62,8 +62,6 @@ The module will follow standard Terraform structure:
 
 ## 5. Example Module Usage
 
-## Usage Example
-
 ```terraform
 # Example main.tf calling the module
 
