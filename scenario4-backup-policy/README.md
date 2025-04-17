@@ -22,3 +22,17 @@ Based on the provided diagram and technical details, the Terraform module must c
     *   Optional `copy_action` for cross-region backups (with frequency, retention, KMS Key ARN).
     *   Optional `copy_action` for cross-account backups (with frequency, retention, KMS Key ARN).
 *   **Resource Selection:** A mechanism to select resources based on specific tags (`ToBackup=true` AND `Owner=<email>`).
+
+## 3. Terraform Module Design
+
+A dedicated Terraform module (`terraform-aws-backup-policy-module`) will be created to manage these resources.
+
+### 3.1. Module Structure
+
+The module will follow standard Terraform structure:
+
+*   `main.tf`: Defines the core resources (`aws_backup_plan`, `aws_backup_selection`, `aws_backup_vault`, `aws_backup_vault_lock_configuration`).
+*   `variables.tf`: Declares input variables for customization (names, schedules, retention periods, KMS ARNs, tag values, destination vault ARNs, feature flags like `enable_cross_region_copy`, `enable_cross_account_copy`, `enable_vault_lock`, etc.).
+*   `outputs.tf`: Defines outputs from the module (e.g., ARNs of created plan and vaults).
+*   `iam.tf`: Defines the `aws_iam_role` and `aws_iam_policy_attachment` needed for AWS Backup.
+*   `README.md`: Documentation *within the module folder* explaining its inputs, outputs, and usage.
