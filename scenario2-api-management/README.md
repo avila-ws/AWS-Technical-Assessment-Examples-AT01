@@ -96,7 +96,7 @@ If absolute network isolation for internal APIs is paramount, or if managing dif
 
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
-*(Content to be added)*
+The current architecture already implies that CloudFront needs to route requests to multiple backend API Gateways, likely based on the request path, as different teams manage different APIs but share the single `api.<organization-domain>.com` entry point. Configuring CloudFront for path-based routing involves defining multiple **Origins** and **Cache Behaviors** within the CloudFront distribution:
 
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
