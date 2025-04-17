@@ -176,10 +176,16 @@ variable "key_rotation_policy_days" {
 }
 
 resource "aws_lambda_function" "kms_byok_rotation_check_lambda" {
-  # Assume Lambda function for checking key material age is defined elsewhere
-  # ... (configuration for the lambda function)
-  function_name = "kms-byok-rotation-check"
-  # ... (role, handler, runtime, etc.)
+  # --- Full Lambda configuration required here ---
+  # This is a placeholder definition. A complete setup would include:
+  # - filename or s3_bucket/s3_key pointing to the Lambda deployment package.
+  # - handler specified correctly (e.g., "lambda_function.lambda_handler").
+  # - runtime (e.g., "python3.9").
+  # - role pointing to an IAM role ARN with necessary permissions (kms:DescribeKey, cloudtrail:LookupEvents, config:PutEvaluations, logs:*).
+  # - Potential VPC configuration, memory size, timeout, etc.
+  # -------------------------------------------------
+
+  function_name = "kms-byok-rotation-check" # Ensure this matches the actual deployed Lambda name
 
   environment {
     variables = {
@@ -322,14 +328,20 @@ def secure_import_key_material(kms_client, target_key_id, plain_key_material_byt
 
         print("Successfully retrieved import token and public key.")
 
-        # 2. Wrap the key material using the on-prem HSM
-        # This part interacts with the HSM environment.
-        # The HSM uses the 'public_key_bytes' to encrypt 'plain_key_material_bytes'.
-        print("Wrapping key material using on-prem HSM...")
+       # 2. Wrap the key material using the on-prem HSM
+        # --- Placeholder for HSM Interaction ---
+        # The following line represents the critical interaction with the on-premise HSM environment.
+        # 'on_prem_hsm_encrypt_function' is a conceptual function specific to the HSM model/API used.
+        # It must take the plain key material and the AWS public key, perform RSAES_OAEP encryption,
+        # and return the base64-encoded ciphertext as per HSM vendor documentation.
+        # This often involves secure API calls or dedicated tools provided by the HSM vendor.
+        # -------------------------------------
+        print("Wrapping key material using on-prem HSM (Conceptual Step)...")
         encrypted_key_material_b64 = on_prem_hsm_encrypt_function(
             plain_key_material_bytes,
             public_key_bytes
         )
+
         # Decode from base64 provided by the HSM function if necessary for Boto3
         encrypted_key_material_bytes = base64.b64decode(encrypted_key_material_b64)
         print("Key material wrapped.")
