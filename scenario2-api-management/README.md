@@ -181,6 +181,10 @@ Implementing the proposed architecture requires attention to several related asp
     *   **Resource Policies:** API Gateway Resource Policies can further restrict access, for example, by explicitly allowing only the VPC Endpoint ID or specific source VPCs to invoke certain APIs or methods, especially if using Option B (Private API Gateways).
     *   **Rate Limiting & Throttling:** Implement appropriate usage plans, rate limiting, and throttling at the API Gateway level for both public and internal traffic paths to protect backend resources. Configure WAF rate-based rules for edge protection.
     *   **Input Validation:** Ensure robust input validation happens within the API Gateway (using request validators) or backend services.
+*   **Governance and Consistency:**
+    *   **API Standards:** Establish and enforce clear standards across teams for API design (e.g., RESTful principles, OpenAPI specs), security configurations, logging formats, and stage deployment processes, especially when managing multiple Regional and potentially Private API Gateways.
+    *   **Discovery:** Implement an internal API discovery mechanism (e.g., a simple registry or leveraging service discovery tools) so internal clients can easily find and consume private APIs.
+    *   **IaC:** Define all components (VPC Endpoints, API Gateways, WAF ACLs, Lambda Authorizers, supporting IAM roles) using Infrastructure as Code (Terraform/CloudFormation) for consistent and repeatable deployments across environments.
 
 ## 9. References
 
