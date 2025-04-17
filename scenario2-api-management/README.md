@@ -98,6 +98,14 @@ If absolute network isolation for internal APIs is paramount, or if managing dif
 
 The current architecture already implies that CloudFront needs to route requests to multiple backend API Gateways, likely based on the request path, as different teams manage different APIs but share the single `api.<organization-domain>.com` entry point. Configuring CloudFront for path-based routing involves defining multiple **Origins** and **Cache Behaviors** within the CloudFront distribution:
 
+1.  **Define Multiple Origins:**
+    *   For each distinct regional API Gateway endpoint that needs to be accessed via CloudFront, define a separate **Origin** in the CloudFront distribution settings.
+    *   **Origin Domain Name:** Use the `execute-api` invoke URL for each regional API Gateway (e.g., `<api-id>.execute-api.<region>.amazonaws.com`).
+    *   **Origin Path (Optional but Recommended):** It's often useful to include the API Gateway stage name (e.g., `/prod`, `/v1`) in the Origin Path field. This simplifies the CloudFront behavior path patterns and keeps the stage name out of the public URL path.
+    *   **Origin Protocol Policy:** Typically set to `HTTPS Only`.
+    *   **Origin Custom Headers (Crucial for Bypass Protection - See Q4):** Add a custom header (e.g., `X-Api-Key`, `X-Internal-Secret`) with a secret value known only to CloudFront and API Gateway. This header will be forwarded by CloudFront and validated at the API Gateway level to ensure requests came through CloudFront.
+    *   **Connection Attempts/Timeout:** Configure appropriate values.
+
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
 *(Content to be added)*
