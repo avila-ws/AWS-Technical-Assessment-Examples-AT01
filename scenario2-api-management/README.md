@@ -174,7 +174,13 @@ The **Custom Header Validation method, ideally implemented using AWS WAF Regiona
 
 ## 8. Additional Considerations (Security, Governance, Cost)
 
-*(Content to be added)*
+Implementing the proposed architecture requires attention to several related aspects:
+
+*   **Security Enhancements:**
+    *   **Fine-Grained Authorization:** Enhance the Lambda Authorizer (or implement separate authorizers/methods for private paths) to enforce stricter permissions based on whether the caller is internal (via VPC Endpoint) or external (via CloudFront). Internal callers might be trusted more based on network origin. Consider using IAM authorization for internal service-to-service calls via the VPC Endpoint if applicable.
+    *   **Resource Policies:** API Gateway Resource Policies can further restrict access, for example, by explicitly allowing only the VPC Endpoint ID or specific source VPCs to invoke certain APIs or methods, especially if using Option B (Private API Gateways).
+    *   **Rate Limiting & Throttling:** Implement appropriate usage plans, rate limiting, and throttling at the API Gateway level for both public and internal traffic paths to protect backend resources. Configure WAF rate-based rules for edge protection.
+    *   **Input Validation:** Ensure robust input validation happens within the API Gateway (using request validators) or backend services.
 
 ## 9. References
 
