@@ -74,6 +74,14 @@ To address the weaknesses identified, particularly the universal public exposure
             *   **Pros:** Minimal disruption to existing API Gateway deployments and CloudFront setup. Reuses existing infrastructure. Simpler to manage initially.
             *   **Cons:** Internal-only APIs are still technically *reachable* via the public endpoint (though potentially blocked by fine-grained authorization if the Lambda authorizer can differentiate callers). Requires careful routing and potentially different authorization logic based on caller source (VPC vs. Internet).
 
+        *   **Option B (More Secure Separation): Dedicated PRIVATE API Gateways + Existing Regional for Public/Mixed:**
+            *   Deploy *new*, separate **Private** API Gateways specifically for **Internal-Only APIs**. These Private APIs are *only* accessible via the VPC Interface Endpoint. They have no public DNS record and cannot be reached from the internet.
+            *   Keep the existing **Regional** API Gateways for **Public-Only** and **Mixed-Use APIs**.
+            *   Internal clients access Internal-Only APIs via the VPC Endpoint hitting the Private API Gateways. Internal clients access Mixed-Use APIs via the VPC Endpoint hitting the Regional API Gateways. External clients access Public/Mixed-Use APIs via CloudFront hitting the Regional API Gateways.
+            *   **Pros:** Provides the strongest network-level isolation for truly internal APIs. Clear separation of concerns. Simplifies authorization logic (Private APIs inherently trust VPC traffic more, potentially needing simpler auth checks).
+            *   **Cons:** Requires deploying and managing additional Private API Gateways. Potentially higher initial setup effort and slight increase in cost/complexity.
+
+
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
 *(Content to be added)*
