@@ -64,6 +64,9 @@ The core logic resides within the `terraform-aws-backup-policy-module` directory
 
 *   **`iam.tf`:** Creates the necessary IAM Role (`aws_iam_role`) with the appropriate trust policy for the AWS Backup service and attaches the required managed policy (`AWSBackupServiceRolePolicyForBackup`) via `aws_iam_policy_attachment`.
 
+*   **`main.tf`:** Contains the primary resource definitions:
+    *   `aws_backup_vault`: Creates the main vault in the primary region.
+    *   `aws_backup_vault_lock_configuration`: Conditionally configures Vault Lock based on input variables.
 
 ## 5. Example Module Usage
 
