@@ -80,3 +80,17 @@ variable "vault_lock_min_retention_days" {
   type        = number
   default     = 7
 }
+
+variable "vault_lock_max_retention_days" {
+  description = "Maximum retention period in days for Vault Lock."
+  type        = number
+  default     = 3650 # Default: 10 years
+}
+
+variable "vault_lock_changeable_for_days" {
+  description = "Number of days the Vault Lock is changeable before being locked immutably (cooling-off period). Min 3 days."
+  type        = number
+  default     = 3
+}
+
+# ---
