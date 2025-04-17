@@ -69,6 +69,10 @@ The core logic resides within the `terraform-aws-backup-policy-module` directory
     *   `aws_backup_vault_lock_configuration`: Conditionally configures Vault Lock based on input variables.
     *   `aws_backup_plan`: Defines the backup plan, including the primary rule (schedule, target vault, primary retention) and dynamically configured `copy_action` blocks for cross-region and cross-account copies based on input flags.
     *   `aws_backup_selection`: Configures the resource selection mechanism, linking the plan to resources matching the specified tags via `selection_tag` blocks and associating the IAM role.
+    
+*   **`outputs.tf`:** Defines the module's outputs, including the ARNs/IDs of the created plan, vault, and IAM role. Crucially, it also conditionally generates and outputs the required `cross_account_destination_vault_policy_json` needed for the target account's vault policy when cross-account copies are enabled. *(Refer to the module's internal README or `outputs.tf` file for the full list).*
+
+The actual Terraform code for these implementations can be found within the module's directory (`./terraform-aws-backup-policy-module/`).
 
 ## 5. Example Module Usage
 
