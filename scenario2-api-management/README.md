@@ -28,6 +28,10 @@ The current API architecture, while functional, presents several significant wea
     *   **Issue:** The most critical weakness is that *all* APIs, including those intended solely for internal application integration, are exposed publicly via the single CloudFront distribution (`api.<organization-domain>.com`) and associated regional API Gateway endpoints. This is explicitly mentioned as being "by design".
     *   **Risk:** This unnecessarily increases the attack surface. Internal APIs, which might have different security requirements or assumptions, are subjected to potential external threats, reconnaissance, and abuse attempts. It violates the principle of least exposure.
 
+2.  **Potential for CloudFront/WAF Bypass:**
+    *   **Issue:** The regional API Gateway endpoints themselves are publicly accessible (by default when created as REGIONAL type). While traffic *should* come through CloudFront/Global WAF, malicious actors or misconfigured clients could potentially discover and directly hit the `execute-api` URLs of the regional API Gateways.
+    *   **Risk:** This bypasses the critical security layers provided by AWS Global WAF and Shield Advanced at the edge (CloudFront), potentially exposing the backend to direct attacks, DDoS, or uninspected traffic. (This is directly addressed in Question 4).
+
 
 ## 4. Question 2: Redesign for Private API Exposure
 
