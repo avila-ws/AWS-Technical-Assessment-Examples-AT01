@@ -32,6 +32,13 @@ The current API architecture, while functional, presents several significant wea
     *   **Issue:** The regional API Gateway endpoints themselves are publicly accessible (by default when created as REGIONAL type). While traffic *should* come through CloudFront/Global WAF, malicious actors or misconfigured clients could potentially discover and directly hit the `execute-api` URLs of the regional API Gateways.
     *   **Risk:** This bypasses the critical security layers provided by AWS Global WAF and Shield Advanced at the edge (CloudFront), potentially exposing the backend to direct attacks, DDoS, or uninspected traffic. (This is directly addressed in Question 4).
 
+3.  **Ambiguous/Potentially Flawed WAF Strategy:**
+    *   **Issue:** There is a discrepancy between the technical details (mentioning only the Global WAF at CloudFront) and the architecture diagram (showing an additional "Regional waf" in the flow).
+        *   If there's *no* regional WAF protection directly on the API Gateways, it exacerbates the bypass risk (#2).
+        *   If there *is* a Regional WAF *in addition* to the Global WAF (as the diagram might imply, although configured differently than shown), there could be redundant rule processing, increased management overhead, and potential cost inefficiencies if not designed carefully.
+    *   **Risk:** Lack of clarity in the security design; potential gaps in protection if only Global WAF exists and bypass occurs; potential inefficiency if both exist without clear role separation.
+
+
 
 ## 4. Question 2: Redesign for Private API Exposure
 
