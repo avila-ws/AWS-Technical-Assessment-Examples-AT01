@@ -113,4 +113,30 @@ resource "aws_backup_plan" "main" {
   # advanced_backup_setting could be added here (e.g., for specific resource types like Windows VSS)
 }
 
-# ---
+# --- Backup Resource Selection ---
+
+resource "aws_backup_selection" "tag_based" {
+  name            = local.selection_name
+  iam_role_arn    = local.iam_role_arn # Reference the ARN from the IAM definition
+  plan_id         = aws_backup_plan.main.id
+
+  # Define tags for selection (MUST match BOTH)
+  selection_tag {
+    type  = "STRINGEQUALS"
+    key   = var.resource_selection_tag_key_1
+    value = var.resource_selection_tag_value_1
+  }
+
+  selection_tag {
+    type  = "STRINGEQUALS"
+    key   = var.resource_selection_tag_key_2
+    value = var.resource_selection_tag_value_2
+  }
+
+  # Optionally add conditions or list of resource ARNs if needed via 'condition' or 'resources' blocks
+
+  # Apply selection tags if provided in var.tags
+  tags = merge(var.tags, {
+    Name = local.selection_name
+  })
+}
