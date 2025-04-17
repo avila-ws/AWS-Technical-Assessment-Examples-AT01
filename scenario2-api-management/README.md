@@ -164,6 +164,10 @@ As identified in the weaknesses (Section 3.2), the public nature of Regional API
     *   **Operational Overhead:** AWS IP ranges change, requiring constant monitoring and updating of the WAF IP Set (can be automated but adds complexity). Failure to update can block legitimate traffic.
     *   **Less Precise:** Allows *any* traffic from a CloudFront IP, not just traffic specifically proxied by *your* distribution. Theoretically, another CloudFront customer could route traffic from a CloudFront IP to your exposed API Gateway endpoint if they knew the URL. (The custom header method prevents this).
 
+**Recommendation:**
+
+The **Custom Header Validation method, ideally implemented using AWS WAF Regional** associated with each API Gateway stage, is the most secure, reliable, and recommended approach to prevent CloudFront bypass. It ensures that only requests processed by your specific CloudFront distribution (which adds the secret header) are allowed by the API Gateways.
+
 
 ## 7. Proposed Architecture Diagram
 
