@@ -119,4 +119,22 @@ variable "cross_region_copy_kms_key_arn" {
   default     = null
 }
 
-# ---
+# --- Cross-Account Copy Configuration (Optional) ---
+
+variable "enable_cross_account_copy" {
+  description = "If true, enables copying backups to a different AWS account."
+  type        = bool
+  default     = true # Default based on requirements
+}
+
+variable "cross_account_destination_vault_arn" {
+  description = "ARN of the pre-existing Backup Vault in the destination account (e.g., Backup Account Frankfurt)."
+  type        = string
+  default     = null # Required if enable_cross_account_copy is true
+}
+
+variable "cross_account_copy_retention_days" {
+  description = "Number of days to retain backups in the cross-account destination vault."
+  type        = number
+  default     = 365 # Default: 1 year
+}
