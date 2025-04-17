@@ -76,4 +76,12 @@ module "prod_backup_policy" {
     ManagedBy   = "BackupModule"
   }
 }
+
+# Output the policy required for the cross-account destination vault
+output "required_cross_account_policy" {
+  description = "Policy JSON to apply to the cross-account destination vault."
+  value       = module.prod_backup_policy.cross_account_destination_vault_policy_json
+}
 ````
+
+(Note: Replace placeholder ARNs and tag values with your actual values).
