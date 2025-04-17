@@ -211,7 +211,6 @@ Implementing the proposed architecture requires attention to several related asp
     *   [Interface VPC Endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-interface.html)
 *   **AWS Shield:**
     *   [AWS Shield Advanced features](https://docs.aws.amazon.com/waf/latest/developerguide/ddos-overview.html#ddos-advanced)
-    
 
 ---
 *This concludes the detailed analysis and proposed solution for Scenario 2.*
