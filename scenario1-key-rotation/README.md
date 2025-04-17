@@ -18,6 +18,8 @@ The existing encryption implementation, illustrated in the provided assessment d
 
 *(Placeholder for a simplified diagram if needed later, e.g., `./diagrams/current_architecture_overview.png`)*
 
+![Current Architecture Overview](https://www.mermaidchart.com/raw/5a516597-90ec-4c81-a4c1-25b277388af3?theme=light&version=v0.1&format=svg)
+
 ## 3. Question 1: Key Rotation Challenges and Impacts
 
 Implementing mandatory rotation for existing BYOK KMS keys presents several challenges and potential impacts across technical, operational, and security dimensions:
