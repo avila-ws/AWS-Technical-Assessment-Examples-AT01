@@ -185,6 +185,12 @@ Implementing the proposed architecture requires attention to several related asp
     *   **API Standards:** Establish and enforce clear standards across teams for API design (e.g., RESTful principles, OpenAPI specs), security configurations, logging formats, and stage deployment processes, especially when managing multiple Regional and potentially Private API Gateways.
     *   **Discovery:** Implement an internal API discovery mechanism (e.g., a simple registry or leveraging service discovery tools) so internal clients can easily find and consume private APIs.
     *   **IaC:** Define all components (VPC Endpoints, API Gateways, WAF ACLs, Lambda Authorizers, supporting IAM roles) using Infrastructure as Code (Terraform/CloudFormation) for consistent and repeatable deployments across environments.
+*   **Cost Implications:**
+    *   **VPC Endpoints:** Interface VPC Endpoints incur hourly charges plus data processing fees. While potentially reducing Egress costs, this needs to be factored in.
+    *   **Private API Gateways (Option B):** If chosen, deploying additional Private API Gateways incurs extra costs compared to reusing existing Regional gateways.
+    *   **WAF Regional:** Using Regional WAF ACLs incurs costs based on the number of ACLs, rules, and requests processed.
+    *   **Lambda Authorizer:** Complex logic might increase execution time/cost, although caching responses can mitigate this.
+*   **Monitoring and Logging:** Ensure comprehensive logging (CloudFront access logs, API Gateway execution logs, WAF logs, Lambda logs) and monitoring (CloudWatch metrics for latency, errors, throttle counts for both API Gateway and VPC Endpoint) are configured for visibility into both public and private traffic paths.
 
 ## 9. References
 
