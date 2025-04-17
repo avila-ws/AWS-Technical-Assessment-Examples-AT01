@@ -162,6 +162,69 @@ The recommended approach involves using **AWS Config** with a **custom rule** ba
 *   **Scalability and Cost:** Consider the number of keys to monitor. AWS Config rule evaluations and Lambda invocations incur costs. Ensure CloudTrail query efficiency in the Lambda function.
 *   **Bootstrapping:** When initially deploying the rule, all keys might be evaluated. There needs to be a defined process or initial grace period for keys newly created or recently rotated just before the rule deployment.
 
+#### IaC Example: Terraform Snippet for Custom Rule
+
+Managing the monitoring components via Infrastructure as Code (IaC) like Terraform is highly recommended. Below is an illustrative snippet showing how the AWS Config custom rule and its link to the evaluation Lambda function could be defined:
+
+```terraform
+# --- Example Terraform Snippet for AWS Config Custom Rule (Illustrative) ---
+
+variable "key_rotation_policy_days" {
+  description = "Maximum allowed age (in days) for imported key material."
+  type        = number
+  default     = 365
+}
+
+resource "aws_lambda_function" "kms_byok_rotation_check_lambda" {
+  # Assume Lambda function for checking key material age is defined elsewhere
+  # ... (configuration for the lambda function)
+  function_name = "kms-byok-rotation-check"
+  # ... (role, handler, runtime, etc.)
+
+  environment {
+    variables = {
+      ROTATION_PERIOD_DAYS = var.key_rotation_policy_days
+    }
+  }
+}
+
+resource "aws_config_config_rule" "byok_key_material_age" {
+  name = "byok-key-material-age-check"
+
+  source {
+    owner             = "CUSTOM_LAMBDA"
+    source_identifier = aws_lambda_function.kms_byok_rotation_check_lambda.arn # Link to the Lambda function ARN
+
+    # Can add source_detail for message types if needed (ConfigurationItemChangeNotification | OversizedConfigurationItemChangeNotification | ScheduledNotification)
+  }
+
+  # Scope to only check AWS KMS Keys
+  scope {
+    compliance_resource_types = ["AWS::KMS::Key"]
+  }
+
+  # Optional: Input parameters to pass to Lambda (e.g., rotation period)
+  # Alternatively, use Lambda environment variables as shown above.
+  # input_parameters = jsonencode({
+  #   maxKeyMaterialAgeDays = var.key_rotation_policy_days
+  # })
+
+  # Trigger type (e.g., run rule periodically)
+  maximum_execution_frequency = "TwentyFour_Hours" # Or Six_Hours, Twelve_Hours etc.
+}
+
+resource "aws_lambda_permission" "allow_config_to_call_lambda" {
+  statement_id  = "AllowConfigToInvokeKMSCheckLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.kms_byok_rotation_check_lambda.function_name
+  principal     = "config.amazonaws.com"
+  source_arn    = aws_config_config_rule.byok_key_material_age.arn
+}
+
+# Note: Ensure CloudTrail is properly configured and the Lambda execution role
+# has necessary permissions (kms:DescribeKey, cloudtrail:LookupEvents, config:PutEvaluations).
+```
+
 ### 5.3. Identifying Non-Compliant *Resources*
 
 While the Config rule primarily targets the *KMS key's* compliance status, identifying the specific *resources* (RDS, S3, DynamoDB) using a non-compliant key requires an additional step:
