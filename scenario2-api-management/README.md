@@ -168,7 +168,6 @@ As identified in the weaknesses (Section 3.2), the public nature of Regional API
 
 The **Custom Header Validation method, ideally implemented using AWS WAF Regional** associated with each API Gateway stage, is the most secure, reliable, and recommended approach to prevent CloudFront bypass. It ensures that only requests processed by your specific CloudFront distribution (which adds the secret header) are allowed by the API Gateways.
 
-
 ## 7. Proposed Architecture Diagram
 
 *(Placeholder for the proposed architecture diagram, e.g., `./diagrams/scenario2-proposed-architecture.png`)*
