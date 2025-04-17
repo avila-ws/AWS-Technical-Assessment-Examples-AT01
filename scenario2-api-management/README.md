@@ -38,6 +38,11 @@ The current API architecture, while functional, presents several significant wea
         *   If there *is* a Regional WAF *in addition* to the Global WAF (as the diagram might imply, although configured differently than shown), there could be redundant rule processing, increased management overhead, and potential cost inefficiencies if not designed carefully.
     *   **Risk:** Lack of clarity in the security design; potential gaps in protection if only Global WAF exists and bypass occurs; potential inefficiency if both exist without clear role separation.
 
+4.  **Inefficient Internal Traffic Routing:**
+    *   **Issue:** Internal clients/applications needing to consume internal APIs currently have to route their traffic out to the public internet, through CloudFront/WAF, and back into AWS to reach the API Gateway.
+    *   **Risk:** This introduces unnecessary latency, potential egress data transfer costs, and subjects purely internal traffic to external security checks and potential edge failures, impacting internal system performance and reliability.
+
+
 
 
 ## 4. Question 2: Redesign for Private API Exposure
