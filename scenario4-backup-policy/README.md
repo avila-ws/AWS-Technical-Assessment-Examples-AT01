@@ -62,7 +62,64 @@ The module will follow standard Terraform structure:
 
 ## 5. Example Module Usage
 
-*(Placeholder: This section will show a simple `main.tf` in the `scenario4-backup-policy` folder demonstrating how to call the created module with example inputs).*
+## Usage Example
+
+```terraform
+# Example main.tf calling the module
+
+provider "aws" {
+  region = "eu-central-1" # Frankfurt - Primary Region Example
+}
+
+# Data source to get the current account ID easily
+data "aws_caller_identity" "current" {}
+
+module "prod_backup_policy" {
+  source = "./terraform-aws-backup-policy-module" # Path to the module directory
+
+  policy_name          = "prod-critical-backups"
+  backup_schedule      = "cron(0 2 ? * MON-FRI *)" # Mon-Fri at 2 AM UTC
+  primary_retention_days = 90
+  primary_kms_key_arn  = "arn:aws:kms:eu-central-1:111122223333:key/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" # Replace with actual primary KMS Key ARN
+
+  # Resource selection tags (Resources must have BOTH)
+  resource_selection_tag_key_1   = "Environment"
+  resource_selection_tag_value_1 = "Production"
+  resource_selection_tag_key_2   = "BackupTier"
+  resource_selection_tag_value_2 = "Critical"
+
+  # Enable Vault Lock on primary vault
+  enable_primary_vault_lock      = true
+  vault_lock_min_retention_days  = 30
+  vault_lock_max_retention_days  = 365 * 7 # 7 years
+  vault_lock_changeable_for_days = 7 # 1 week cooling-off
+
+  # Cross-Region Copy Config (Example: Frankfurt to Ireland)
+  enable_cross_region_copy           = true
+  cross_region_destination_vault_arn = "arn:aws:backup:eu-west-1:111122223333:backup-vault:prod-frankfurt-copy-vault-ireland" # Replace with actual Dest Vault ARN in Ireland
+  cross_region_copy_retention_days = 365
+
+  # Cross-Account Copy Config (Example: Prod Frankfurt to Backup Frankfurt)
+  enable_cross_account_copy            = true
+  cross_account_destination_vault_arn = "arn:aws:backup:eu-central-1:999988887777:backup-vault:prod-backup-target-vault" # Replace with actual Dest Vault ARN in Backup Account
+  cross_account_copy_retention_days = 365 * 5 # 5 years
+  source_account_id                    = data.aws_caller_identity.current.account_id # Pass current account ID for policy generation
+
+  tags = {
+    Terraform   = "true"
+    Environment = "Production"
+    ManagedBy   = "BackupModule"
+  }
+}
+
+# Output the policy required for the cross-account destination vault
+output "required_cross_account_policy" {
+  description = "Policy JSON to apply to the cross-account destination vault."
+  value       = module.prod_backup_policy.cross_account_destination_vault_policy_json
+}
+````
+
+*(Note: Replace placeholder ARNs and tag values with your actual values).*
 
 ## 6. References
 
