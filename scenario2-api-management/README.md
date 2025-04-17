@@ -42,6 +42,13 @@ The current API architecture, while functional, presents several significant wea
     *   **Issue:** Internal clients/applications needing to consume internal APIs currently have to route their traffic out to the public internet, through CloudFront/WAF, and back into AWS to reach the API Gateway.
     *   **Risk:** This introduces unnecessary latency, potential egress data transfer costs, and subjects purely internal traffic to external security checks and potential edge failures, impacting internal system performance and reliability.
 
+5.  **Centralized Lambda Authorizer Bottleneck/Blast Radius:**
+    *   **Issue:** While centralizing authorization can have benefits, using a single Lambda Authorizer for *all* API Gateways creates a potential performance bottleneck and a single point of failure.
+    *   **Risk:** High load across all APIs could throttle the authorizer. An error or failure within this single Lambda function could impact the availability of *all* APIs simultaneously, increasing the blast radius of any incident related to authorization.
+
+
+    
+
 
 
 
