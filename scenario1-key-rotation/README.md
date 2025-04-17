@@ -289,6 +289,81 @@ The actual API call to import the material must be secured:
 
 By layering these controls—encrypting the key material at the source using AWS-provided public keys, transmitting over secure channels (TLS, private network), and using tightly scoped IAM permissions for the import API call—the transportation process achieves a high degree of security required for sensitive cryptographic material.
 
+#### SDK Example: Conceptual Python Snippet for Import
+
+The following conceptual Python snippet using the Boto3 SDK illustrates the key API interactions involved in the BYOK import process described above. Note that error handling and the specific interaction with the on-premise HSM (`on_prem_hsm_encrypt_function`) would need to be implemented based on the actual environment.
+
+```python
+# --- Conceptual Python Snippet using Boto3 for Key Import ---
+
+import boto3
+import base64 # For handling binary data
+
+# Assume kms_client is initialized: kms_client = boto3.client('kms')
+# Assume target_key_id is the ARN/ID of the KMS key with Origin=EXTERNAL
+# Assume on_prem_hsm_encrypt_function(plain_key_material, rsa_public_key) is a function
+# that interacts with the HSM to wrap the plain material using the provided public key
+# and returns the base64-encoded ciphertext.
+
+def secure_import_key_material(kms_client, target_key_id, plain_key_material_bytes):
+    """Conceptual function for BYOK import process."""
+
+    try:
+        # 1. Get parameters for import from AWS KMS
+        print("Requesting import parameters from AWS KMS...")
+        response_params = kms_client.get_parameters_for_import(
+            KeyId=target_key_id,
+            WrappingAlgorithm='RSAES_OAEP_SHA_256', # Or RSAES_OAEP_SHA_1
+            WrappingKeySpec='RSA_2048' # Or RSA_3072, RSA_4096 matching the CMK spec
+        )
+
+        import_token = response_params['ImportToken']
+        public_key_bytes = response_params['PublicKey'] # This is the RSA public key from AWS
+
+        print("Successfully retrieved import token and public key.")
+
+        # 2. Wrap the key material using the on-prem HSM
+        # This part interacts with the HSM environment.
+        # The HSM uses the 'public_key_bytes' to encrypt 'plain_key_material_bytes'.
+        print("Wrapping key material using on-prem HSM...")
+        encrypted_key_material_b64 = on_prem_hsm_encrypt_function(
+            plain_key_material_bytes,
+            public_key_bytes
+        )
+        # Decode from base64 provided by the HSM function if necessary for Boto3
+        encrypted_key_material_bytes = base64.b64decode(encrypted_key_material_b64)
+        print("Key material wrapped.")
+
+        # 3. Import the encrypted key material into AWS KMS
+        print("Importing encrypted key material into KMS...")
+        response_import = kms_client.import_key_material(
+            KeyId=target_key_id,
+            ImportToken=import_token,
+            EncryptedKeyMaterial=encrypted_key_material_bytes,
+            ExpirationModel='KEY_MATERIAL_EXPIRES', # Or KEY_MATERIAL_DOES_NOT_EXPIRE
+            ValidTo=None # Optional: specify an expiration datetime object
+        )
+
+        print(f"Import API call successful: {response_import}")
+        print("Key material imported successfully!")
+        return True
+
+    except kms_client.exceptions.ExpiredImportTokenException:
+        print("Error: The import token has expired. Please retrieve new parameters.")
+        return False
+    except Exception as e:
+        print(f"An error occurred during key import: {e}")
+        return False
+
+# --- Example Usage (Conceptual) ---
+# kms = boto3.client('kms', region_name='us-east-1')
+# key_id = 'arn:aws:kms:us-east-1:111122223333:key/your-key-id'
+# # Assume 'new_aes_key_bytes' holds your raw 32-byte AES key from the HSM
+# # success = secure_import_key_material(kms, key_id, new_aes_key_bytes)
+
+# --- End of Snippet ---
+```
+
 ## 7. Additional Considerations and Next Steps
 
 Beyond directly answering the questions, several strategic and operational considerations enhance the proposed key rotation strategy:
