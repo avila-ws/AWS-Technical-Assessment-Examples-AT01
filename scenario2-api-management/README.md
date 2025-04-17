@@ -152,6 +152,18 @@ As identified in the weaknesses (Section 3.2), the public nature of Regional API
 *   **Pros:** Highly effective, standard pattern, flexible validation options (WAF preferred).
 *   **Cons:** Requires managing a secret value; slight overhead in CloudFront configuration and chosen validation mechanism.
 
+**2. AWS WAF Regional IP Restrictions (More Complex/Less Flexible):**
+
+*   **Concept:** Instead of a custom header, configure the Regional WAF associated with the API Gateways to only allow traffic originating from CloudFront's known public IP address ranges.
+*   **Implementation:**
+    *   Subscribe to AWS IP address range notifications.
+    *   Maintain an IP Set within the Regional WAF rules that contains CloudFront's current edge server IP ranges.
+    *   Set the WAF rule to `ALLOW` traffic from this IP Set and `BLOCK` all other traffic.
+*   **Pros:** Doesn't rely on a shared secret header.
+*   **Cons:**
+    *   **Operational Overhead:** AWS IP ranges change, requiring constant monitoring and updating of the WAF IP Set (can be automated but adds complexity). Failure to update can block legitimate traffic.
+    *   **Less Precise:** Allows *any* traffic from a CloudFront IP, not just traffic specifically proxied by *your* distribution. Theoretically, another CloudFront customer could route traffic from a CloudFront IP to your exposed API Gateway endpoint if they knew the URL. (The custom header method prevents this).
+
 
 ## 7. Proposed Architecture Diagram
 
