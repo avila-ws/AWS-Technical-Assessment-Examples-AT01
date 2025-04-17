@@ -53,4 +53,14 @@ resource "aws_backup_vault_lock_configuration" "primary_lock" {
   changeable_for_days         = var.vault_lock_changeable_for_days
 }
 
+# --- IAM Role (Defined in iam.tf) ---
+# We refer to the role ARN output from the iam module/file
+module "iam" {
+  source            = "./iam.tf" # Placeholder if using a true submodule structure
+                                # If iam.tf is in the same dir, direct reference via local.iam_role_arn suffices
+  role_name_prefix  = "${var.policy_name}-backup-role"
+  tags              = var.tags
+  backup_iam_role_name = var.backup_iam_role_name # Pass through optional name
+}
+
 # ---
