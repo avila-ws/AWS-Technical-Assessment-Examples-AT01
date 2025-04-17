@@ -46,6 +46,11 @@ The current API architecture, while functional, presents several significant wea
     *   **Issue:** While centralizing authorization can have benefits, using a single Lambda Authorizer for *all* API Gateways creates a potential performance bottleneck and a single point of failure.
     *   **Risk:** High load across all APIs could throttle the authorizer. An error or failure within this single Lambda function could impact the availability of *all* APIs simultaneously, increasing the blast radius of any incident related to authorization.
 
+6.  **Management Complexity:**
+    *   **Issue:** Managing multiple independent API Gateways developed by different teams without strong governance can lead to inconsistencies in configuration, stage deployment, logging, monitoring, and adherence to standards.
+    *   **Risk:** Increased operational burden, potential for configuration drift, and difficulties in maintaining a unified view of the entire API landscape.
+
+
 
     
 
