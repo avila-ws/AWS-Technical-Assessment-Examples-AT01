@@ -81,6 +81,11 @@ To address the weaknesses identified, particularly the universal public exposure
             *   **Pros:** Provides the strongest network-level isolation for truly internal APIs. Clear separation of concerns. Simplifies authorization logic (Private APIs inherently trust VPC traffic more, potentially needing simpler auth checks).
             *   **Cons:** Requires deploying and managing additional Private API Gateways. Potentially higher initial setup effort and slight increase in cost/complexity.
 
+3.  **Authorization Adaptation:**
+    *   The central Lambda Authorizer might need adjustments depending on the chosen option:
+        *   **Option A:** The authorizer may need logic to differentiate between calls coming via the public CloudFront path vs. the private VPC Endpoint path (e.g., inspecting source IP, presence/absence of specific headers injected by CloudFront) to apply potentially different authorization rules.
+        *   **Option B:** Private API Gateways could potentially use simpler authorization mechanisms (e.g., Resource Policies restricting source VPC/Endpoint, simpler Lambda logic, or even IAM authorization if services use IAM roles) since the network path is already trusted. The existing Lambda Authorizer would remain primarily for the Regional (public/mixed) APIs.
+
 
 ## 5. Question 3: CloudFront Path-Based Routing Configuration
 
