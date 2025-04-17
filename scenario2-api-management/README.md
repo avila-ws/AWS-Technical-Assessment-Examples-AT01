@@ -137,6 +137,21 @@ By correctly configuring multiple Origins (one per target API GW) and Cache Beha
 
 As identified in the weaknesses (Section 3.2), the public nature of Regional API Gateway endpoints creates a risk that clients might bypass CloudFront and the associated Global WAF/Shield Advanced protections by directly invoking the `<api-id>.execute-api.<region>.amazonaws.com` URL. To mitigate this bypass risk and ensure all traffic flows through CloudFront, several layered solutions can be implemented:
 
+**1. Custom Header Validation (Recommended Primary Method):**
+
+*   **Concept:** Configure CloudFront to add a unique, secret custom HTTP header to all requests it forwards to the API Gateway origins. Then, configure the API Gateways to *only* accept requests containing this specific header with the correct secret value. Requests lacking the header or having an incorrect value are rejected.
+*   **Implementation Steps:**
+    1.  **Generate Secret Value:** Create a strong, unpredictable secret value (e.g., a long random string or UUID). Store this securely (e.g., AWS Secrets Manager or Systems Manager Parameter Store). **Do not hardcode it.**
+    2.  **CloudFront Origin Configuration:** For each API Gateway origin defined in CloudFront (as discussed in Section 5), add an **Origin Custom Header**.
+        *   Header Name: Choose a non-standard name (e.g., `X-Origin-Verify`, `X-Internal-Signature`).
+        *   Header Value: The secret value generated in step 1.
+    3.  **API Gateway Validation:** Configure validation at the API Gateway level to check for the presence and correctness of this custom header. This can be done using:
+        *   **AWS WAF Regional:** Associate a Regional WAF WebACL directly with each Regional API Gateway stage. Create a custom rule within this WebACL that checks if the `X-Origin-Verify` header exists and matches the secret string. Set the rule action to `ALLOW` if it matches and the default action of the WebACL to `BLOCK`. This explicitly blocks any request that doesn't have the valid header. **This is generally the most robust and recommended approach.**
+        *   **Lambda Authorizer:** Modify the existing central Lambda Authorizer (or dedicated authorizers if decentralizing) to include logic that inspects incoming request headers. If the expected custom header and secret value are *not* present, the authorizer should return an `Unauthorized` (401) or `Forbidden` (403) policy response, denying access before the request even reaches the backend integration.
+        *   **API Gateway Request Validator (Less Secure for this purpose):** While API Gateway has built-in request validation, it's typically better suited for checking standard parameters (query strings, standard headers, body schemas) rather than enforcing a secret custom header for origin verification. WAF or Lambda Authorizer provide stronger, more explicit control for this security requirement.
+*   **Pros:** Highly effective, standard pattern, flexible validation options (WAF preferred).
+*   **Cons:** Requires managing a secret value; slight overhead in CloudFront configuration and chosen validation mechanism.
+
 
 ## 7. Proposed Architecture Diagram
 
