@@ -67,6 +67,8 @@ The core logic resides within the `terraform-aws-backup-policy-module` directory
 *   **`main.tf`:** Contains the primary resource definitions:
     *   `aws_backup_vault`: Creates the main vault in the primary region.
     *   `aws_backup_vault_lock_configuration`: Conditionally configures Vault Lock based on input variables.
+    *   `aws_backup_plan`: Defines the backup plan, including the primary rule (schedule, target vault, primary retention) and dynamically configured `copy_action` blocks for cross-region and cross-account copies based on input flags.
+    *   `aws_backup_selection`: Configures the resource selection mechanism, linking the plan to resources matching the specified tags via `selection_tag` blocks and associating the IAM role.
 
 ## 5. Example Module Usage
 
