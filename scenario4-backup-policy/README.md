@@ -58,7 +58,8 @@ The module will follow standard Terraform structure:
 
 ## 4. Module Implementation Details
 
-*(Placeholder: This section will later contain the actual code for `variables.tf`, `main.tf`, `outputs.tf`, `iam.tf` from the module folder).*
+The core logic resides within the `terraform-aws-backup-policy-module` directory. The key files are:
+
 
 ## 5. Example Module Usage
 
