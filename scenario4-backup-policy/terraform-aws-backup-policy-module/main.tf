@@ -31,3 +31,15 @@ locals {
       } : null
   }
 }
+
+# --- Primary Backup Vault ---
+
+resource "aws_backup_vault" "primary" {
+  name        = local.primary_vault_name
+  kms_key_arn = var.primary_kms_key_arn
+  tags = merge(var.tags, {
+    Name = local.primary_vault_name
+  })
+}
+
+# --
