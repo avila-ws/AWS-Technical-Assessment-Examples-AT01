@@ -106,6 +106,18 @@ The current architecture already implies that CloudFront needs to route requests
     *   **Origin Custom Headers (Crucial for Bypass Protection - See Q4):** Add a custom header (e.g., `X-Api-Key`, `X-Internal-Secret`) with a secret value known only to CloudFront and API Gateway. This header will be forwarded by CloudFront and validated at the API Gateway level to ensure requests came through CloudFront.
     *   **Connection Attempts/Timeout:** Configure appropriate values.
 
+2.  **Define Cache Behaviors for Path Patterns:**
+    *   CloudFront uses **Cache Behaviors** to determine how requests matching specific path patterns are handled, including which Origin they are forwarded to.
+    *   **Default Behavior (`*`):** Configure a default cache behavior that might handle root requests or act as a fallback. This typically points to one of the main API Gateway origins or returns a specific response.
+    *   **Path-Specific Behaviors:** For each group of API endpoints belonging to a specific API Gateway (or logical service), create a new Cache Behavior:
+        *   **Path Pattern:** Define a pattern that uniquely identifies requests for that group (e.g., `/users/*`, `/orders/*`, `/products/v2/*`). CloudFront matches these in order, so place more specific patterns before more general ones.
+        *   **Origin and Origin Group:** Select the specific **Origin** (defined in step 1) corresponding to the correct backend API Gateway for this path pattern.
+        *   **Viewer Protocol Policy:** Usually `Redirect HTTP to HTTPS`.
+        *   **Allowed HTTP Methods:** Configure allowed methods (GET, HEAD, POST, PUT, DELETE, etc.).
+        *   **Cache Policy and Origin Request Policy:** Configure caching settings (often minimal or no caching for dynamic APIs) and which headers/cookies/query strings are forwarded to the origin (important for authorization, pagination, etc.). Ensure the custom header for bypass protection is included in the Origin Request Policy.
+        *   **Response Headers Policy:** Configure CORS or other response headers if needed.
+        *   **(Optional) WAF Association:** Although the Global WAF is associated at the distribution level, specific cache behaviors could potentially have nuanced configurations if needed, though often not required for WAF itself.
+
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
 *(Content to be added)*
