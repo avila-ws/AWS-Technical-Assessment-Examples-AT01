@@ -151,4 +151,9 @@ variable "source_account_id" {
   default     = null # Can be retrieved using 'data "aws_caller_identity" "current" {}'
 }
 
-# ---
+# --- IAM Role ---
+variable "backup_iam_role_name" {
+  description = "Optional specific name for the AWS Backup IAM role. Defaults to '<policy_name>-backup-role'."
+  type        = string
+  default     = null
+}
