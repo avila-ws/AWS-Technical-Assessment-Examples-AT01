@@ -16,8 +16,6 @@ The existing encryption implementation, illustrated in the provided assessment d
 *   **Key Aliases:** KMS key aliases (e.g., `alias/service-environment`) are used to reference keys, abstracting applications from specific key IDs. This is crucial for simplifying rotation.
 *   **Least Privilege:** Key policies are implemented following the principle of least privilege, granting only necessary permissions to users and services.
 
-*(Placeholder for a simplified diagram if needed later, e.g., `./diagrams/current_architecture_overview.png`)*
-
 ![Current Architecture Overview](https://www.mermaidchart.com/raw/5a516597-90ec-4c81-a4c1-25b277388af3?theme=light&version=v0.1&format=svg)
 
 ## 3. Question 1: Key Rotation Challenges and Impacts
@@ -38,8 +36,7 @@ AWS services interact with KMS keys differently, leading to varied rotation impa
     *   **Challenge:** Tables encrypted with KMS (SSE-KMS) using a Customer Managed Key (CMK) handle key reference typically via alias. When the alias points to a new key/version, *newly written data* will use that new key. AWS manages the background encryption process. Similar to S3, DynamoDB *does not automatically re-encrypt all existing data* immediately upon alias change or key material rotation. Re-encryption happens over time as data is naturally rewritten or potentially through a full table export/import or backup/restore cycle if immediate compliance is mandated for all data.
     *   **Impact:** Potential performance implications during periods of heavy writes or explicit re-encryption activities. The primary impact is ensuring compliance timelines align with how DynamoDB handles key changes for existing data.
 
-*(Placeholder for a diagram illustrating these differential impacts, e.g., `./diagrams/service_specific_challenges.png`)*
-
+![Diagram Comparing Service-Specific Key Rotation Impacts](https://www.mermaidchart.com/raw/57fc13d3-15c8-4bc2-af4b-15ce4f4e12e6?theme=light&version=v0.1&format=svg)
 ### 3.2. Operational Challenges
 
 *   **Coordination:** Managing rotation across multiple environments (Dev, Int, Prod) and various service teams requires significant coordination and planning.
