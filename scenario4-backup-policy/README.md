@@ -36,3 +36,14 @@ The module will follow standard Terraform structure:
 *   `outputs.tf`: Defines outputs from the module (e.g., ARNs of created plan and vaults).
 *   `iam.tf`: Defines the `aws_iam_role` and `aws_iam_policy_attachment` needed for AWS Backup.
 *   `README.md`: Documentation *within the module folder* explaining its inputs, outputs, and usage.
+
+### 3.2. Mapping Requirements to Terraform Resources
+
+*   **Vaults:** `aws_backup_vault` resources, potentially controlled by `count` based on boolean enable flags. KMS encryption key ARN provided via variable.
+*   **Vault Lock:** `aws_backup_vault_lock_configuration` resource, potentially controlled by `count`.
+*   **IAM Role:** `aws_iam_role`, `aws_iam_policy_attachment` (using `AWSBackupServiceRolePolicyForBackup`).
+*   **Plan:** `aws_backup_plan` with nested `rule` block(s).
+    *   Rule `lifecycle`: For primary retention (`delete_after_days`).
+    *   Rule `copy_action`: Dynamic blocks (`for_each` on a map or using `count`) triggered by boolean enable flags, configuring `destination_vault_arn` and nested `lifecycle`.
+*   **Selection:** `aws_backup_selection` linked to the plan ID, using `selection_tag` blocks (requiring `type = "STRINGEQUALS"`) and referencing the IAM role ARN.
+*   **KMS Keys:** The module **will not create** KMS keys; their ARNs must be provided as input variables.
