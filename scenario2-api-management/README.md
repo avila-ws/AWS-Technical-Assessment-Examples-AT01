@@ -118,6 +118,22 @@ The current architecture already implies that CloudFront needs to route requests
         *   **Response Headers Policy:** Configure CORS or other response headers if needed.
         *   **(Optional) WAF Association:** Although the Global WAF is associated at the distribution level, specific cache behaviors could potentially have nuanced configurations if needed, though often not required for WAF itself.
 
+**Example Configuration Flow:**
+
+*   Request `https://api.example.com/users/123`
+    *   CloudFront checks Behaviors.
+    *   Matches Path Pattern `/users/*`.
+    *   This behavior points to Origin "APIGW-Users" (`<users-api-id>.execute-api...`).
+    *   CloudFront forwards the request `/users/123` (potentially stripping `/users` if configured via Origin Path) to the "APIGW-Users" origin, including necessary headers (like `Host`, forwarded auth headers, and the custom secret header).
+*   Request `https://api.example.com/orders/456`
+    *   CloudFront checks Behaviors.
+    *   Matches Path Pattern `/orders/*`.
+    *   This behavior points to Origin "APIGW-Orders" (`<orders-api-id>.execute-api...`).
+    *   CloudFront forwards the request `/orders/456` to the "APIGW-Orders" origin.
+
+By correctly configuring multiple Origins (one per target API GW) and Cache Behaviors (matching specific URL path patterns to those Origins), CloudFront can effectively act as a central router or reverse proxy for the multiple backend API Gateways.
+
+
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
 *(Content to be added)*
