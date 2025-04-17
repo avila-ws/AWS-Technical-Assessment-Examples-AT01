@@ -135,7 +135,8 @@ By correctly configuring multiple Origins (one per target API GW) and Cache Beha
 
 ## 6. Question 4: Protecting Regional APIGW Endpoints from Bypass
 
-*(Content to be added)*
+As identified in the weaknesses (Section 3.2), the public nature of Regional API Gateway endpoints creates a risk that clients might bypass CloudFront and the associated Global WAF/Shield Advanced protections by directly invoking the `<api-id>.execute-api.<region>.amazonaws.com` URL. To mitigate this bypass risk and ensure all traffic flows through CloudFront, several layered solutions can be implemented:
+
 
 ## 7. Proposed Architecture Diagram
 
